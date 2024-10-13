@@ -182,18 +182,19 @@ import upload_area from '../assets/Assets/Admin_Assets/upload_area.svg';
 import { toast } from 'react-toastify';
 
 const AddProduct = () => {
-  const [image, setImage] = useState(false);
-  const [productDetails, setProductDetails] = useState({
-    name: '',
-    description: '',
-    image: '',
-    category: 'men',
-    sub_category: '',
-    sizes: [], // Initially empty
-    new_price: '',
-    old_price: '',
-    availibility: ''
-  });
+  const [image1, setImage1] = useState(false);
+  const [image2, setImage2] = useState(false);
+  const [image3, setImage3] = useState(false);
+  const [image4, setImage4] = useState(false);
+
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
+  const [price, setPrice] = useState('')
+  const [category, setCategory] = useState('')
+  const [subCategory, setSubcategory] = useState('')
+  const [bestSeller, setBestSeller] = useState(false)
+  const [size, setSize] = useState([])
+
 
   console.log(productDetails)
 
@@ -258,7 +259,7 @@ const AddProduct = () => {
             <h1 className='text-xl mb-2'>Product Title</h1>
             <input
               value={productDetails.name}
-              onChange={changeHandler}
+              onChange={()=> set}
               className='w-full py-3 px-2 border'
               type='text'
               name='name'
@@ -269,7 +270,7 @@ const AddProduct = () => {
             <h1 className='text-xl mb-2'>Product Description</h1>
             <textarea
               value={productDetails.description}
-              onChange={changeHandler}
+              onChange={()=> set}
               className='w-full py-3 px-2 border'
               name='description'
               placeholder='Type here'
@@ -281,7 +282,7 @@ const AddProduct = () => {
               <h1 className='text-xl mb-2'>Price</h1>
               <input
                 value={productDetails.old_price}
-                onChange={changeHandler}
+                onChange={()=> set}
                 className='w-full py-3 px-2 border'
                 type='number'
                 name='old_price'
@@ -293,7 +294,7 @@ const AddProduct = () => {
               <h1 className='text-xl mb-2'>Offer Price</h1>
               <input
                 value={productDetails.new_price}
-                onChange={changeHandler}
+                onChange={()=> set}
                 className='w-full py-3 px-2 border'
                 type='number'
                 name='new_price'
@@ -304,7 +305,7 @@ const AddProduct = () => {
           <div className='mb-4'>
             <h1 className='text-xl mb-2'>Availibility</h1>
             <select name="availibility" value={productDetails.availibility}
-              onChange={changeHandler} className='w-full border py-3 px-2'>
+              onChange={()=> set} className='w-full border py-3 px-2'>
               <option value="in_stock">In Stock</option>
               <option value="out_of_stock">Out of Stock</option>
             </select>
@@ -321,7 +322,7 @@ const AddProduct = () => {
                     type='checkbox'
                     value={size}
                     checked={productDetails.sizes.includes(size)}
-                    onChange={() => handleSizeChange(size)}
+                    onChange={() => ()=> setizeChange(size)}
                   />
                   {size}
                 </label>
@@ -333,7 +334,7 @@ const AddProduct = () => {
               <h1 className='text-xl mb-2'>Product Category</h1>
               <select
                 value={productDetails.category}
-                onChange={changeHandler}
+                onChange={()=> set}
                 className='w-full border py-3 px-2'
                 name='category'
               >
@@ -345,7 +346,7 @@ const AddProduct = () => {
               <h1 className='text-xl mb-2'>Product Sub-Category</h1>
               <select
                 value={productDetails.sub_category}
-                onChange={changeHandler}
+                onChange={()=> set}
                 className='w-full border py-3 px-2'
                 name='sub_category'
               >
@@ -356,6 +357,11 @@ const AddProduct = () => {
               </select>
             </div>
           </div>
+
+              <div className='flex gap-5 items-center mb-5'>
+                <input type="checkbox" id='bestseller' />
+              <label className='cursor-pointer' htmlFor="bestseller">Add to bestseller</label>
+              </div>
 
           <div className='cursor-pointer justify-start w-fit' onClick={() => document.getElementById('file-input').click()}>
             <label htmlFor="image">
@@ -369,7 +375,7 @@ const AddProduct = () => {
           </div>
           <input
             id='file-input'
-            onChange={imageHandler}
+            onChange={imageHandler()=> set
             type='file'
             hidden
             name='image'
