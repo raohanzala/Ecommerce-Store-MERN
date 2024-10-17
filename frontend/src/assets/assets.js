@@ -91,6 +91,7 @@ import menu_icon from './support_img.png'
 import razorpay_logo from './razorpay_logo.png'
 import stripe_logo from './razorpay_logo.png'
 import cross_icon from './cross_icon.png'
+import upload_area from '../../../admin/src/assets/Assets/Admin_Assets/upload_area.svg'
 
 export const assets = {
     logo,
@@ -115,7 +116,8 @@ export const assets = {
     cross_icon,
     omega_speedmaster,
     hublot_senna_1,
-    rolex_yatch_master_1
+    rolex_yatch_master_1,
+    upload_area,
 
 }
 
