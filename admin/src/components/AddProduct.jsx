@@ -5,7 +5,7 @@
 // const AddProduct = () => {
 
 //   const [image, setImage] = useState(false)
-//   const [selectedSizes, setSelectedSizes] = useState([]);
+//   const [selectedSizess, setSelectedSizess] = useState([]);
 
 
 //   const [etails] = useState({
@@ -14,14 +14,14 @@
 //     image: '',
 //     category: 'men',
 //     sub_category: '',
-//     sizes: selectedSizes,
+//     sizess: selectedSizess,
 //     new_price: '',
 //     old_price: '',
 //     availibility: ''
 //   })
 
-//   console.log(selectedSizes)
-//   console.log(productDetails.selectedSizes)
+//   console.log(selectedSizess)
+//   console.log(productDetails.selectedSizess)
 
 //   const imageHandler = (e) => {
 //     setImage(e.target.files[0])
@@ -33,12 +33,12 @@
 //   }
 
 
-//   const handleSizeChange = (size) => {
-//     setSelectedSizes((prevSizes) => {
-//       if (prevSizes.includes(size)) {
-//         return prevSizes.filter((s) => s !== size);
+//   const handleSizesChange = (sizes) => {
+//     setSelectedSizess((prevSizess) => {
+//       if (prevSizess.includes(sizes)) {
+//         return prevSizess.filter((s) => s !== sizes);
 //       } else {
-//         return [...prevSizes, size];
+//         return [...prevSizess, sizes];
 //       }
 //     });
 //   };
@@ -109,17 +109,17 @@
 //         <div>
 
 //           <div className='mb-4'>
-//             <h1 className='text-xl mb-2'>Sizes</h1>
+//             <h1 className='text-xl mb-2'>Sizess</h1>
 //             <div className='flex flex-wrap gap-2'>
-//               {['S', 'M', 'L', 'XL'].map((size) => (
-//                 <label key={size} className='flex items-center gap-2'>
+//               {['S', 'M', 'L', 'XL'].map((sizes) => (
+//                 <label key={sizes} className='flex items-center gap-2'>
 //                   <input
 //                     type='checkbox'
-//                     value={size}
-//                     checked={selectedSizes.includes(size)}
-//e) => handleSizeChange(e.target.value)}
+//                     value={sizes}
+//                     checked={selectedSizess.includes(sizes)}
+//e) => handleSizesChange(e.target.value)}
 //                   />
-//                   {size}
+//                   {sizes}
 //                 </label>
 //               ))}
 //             </div>
@@ -181,8 +181,10 @@ import React, { useState } from 'react'
 import upload_area from '../assets/Assets/Admin_Assets/upload_area.svg';
 import { toast } from 'react-toastify';
 import { assets } from '../../../frontend/src/assets/assets';
+import axios from 'axios';
+import { backendUrl } from '../App';
 
-const AddProduct = () => {
+const AddProduct = ({token}) => {
   const [image1, setImage1] = useState(false);
   const [image2, setImage2] = useState(false);
   const [image3, setImage3] = useState(false);
@@ -195,10 +197,50 @@ const AddProduct = () => {
   const [category, setCategory] = useState('')
   const [subCategory, setSubcategory] = useState('')
   const [bestSeller, setBestSeller] = useState(false)
-  const [size, setSize] = useState([])
+  const [sizes, setSizes] = useState([])
 
-  const onSubmitHandler = async ()=> {
+  const onSubmitHandler = async (e)=> {
+    e.preventDefault()
 
+    try {
+        const formData = new FormData()
+
+        formData.append("name",name )
+        formData.append("description",description )
+        formData.append("oldPrice",oldPrice )
+        formData.append("newPrice",newPrice )
+        formData.append("category",category )
+        formData.append("subCategory",subCategory )
+        formData.append("bestSeller",subCategory )
+        formData.append("sizes",JSON.stringify(sizes) )
+
+      image1 &&  formData.append("image1", image1)
+      image2 &&  formData.append("image2", image2)
+      image3 &&  formData.append("image3", image3)
+      image4 &&  formData.append("image4", image4)
+
+      const response = await axios.post(backendUrl + '/api/product/add', formData, {headers : {token}})
+
+      console.log(response.data)
+
+      if(response.data.success){
+        toast.success(response.data.message)
+        setName('')
+        setDescription('')
+        setImage1(false)
+        setImage2(false)
+        setImage3(false)
+        setImage4(false)
+        setOldPrice('')
+        setNewPrice('')
+      }else{
+        toast.error(response.data.message)
+      }
+
+    } catch (error) {
+        console.log(error)
+        toast.error(error.message)
+    }
   }
 
 
@@ -263,22 +305,22 @@ const AddProduct = () => {
           <div className='mb-4'>
             <h1 className='text-xl mb-2'>Sizes</h1>
             <div className='flex gap-3'>
-              <div onClick={() => setSize(prev => prev.includes("S") ? prev.filter(item => item !== 'S') : [...prev, "S"])}>
-                <p className={` ${size.includes("S") ? 'bg-black text-white' : 'bg-slate-200'} px-3 py-1 cursor-pointer`}>S</p>
+              <div onClick={() => setSizes(prev => prev.includes("S") ? prev.filter(item => item !== 'S') : [...prev, "S"])}>
+                <p className={` ${sizes.includes("S") ? 'bg-black text-white' : 'bg-slate-200'} px-3 py-1 cursor-pointer`}>S</p>
               </div>
-              <div onClick={() => setSize(prev => prev.includes("M") ? prev.filter(item => item !== 'M') : [...prev, "M"])}>
+              <div onClick={() => setSizes(prev => prev.includes("M") ? prev.filter(item => item !== 'M') : [...prev, "M"])}>
 
-                <p className={` ${size.includes("M") ? 'bg-black text-white' : 'bg-slate-200'} px-3 py-1 cursor-pointer`}>M</p>
+                <p className={` ${sizes.includes("M") ? 'bg-black text-white' : 'bg-slate-200'} px-3 py-1 cursor-pointer`}>M</p>
               </div>
-              <div onClick={() => setSize(prev => prev.includes("L") ? prev.filter(item => item !== 'L') : [...prev, "L"])}>
+              <div onClick={() => setSizes(prev => prev.includes("L") ? prev.filter(item => item !== 'L') : [...prev, "L"])}>
 
-                <p className={` ${size.includes("L") ? 'bg-black text-white' : 'bg-slate-200'} px-3 py-1 cursor-pointer`}>L</p>
+                <p className={` ${sizes.includes("L") ? 'bg-black text-white' : 'bg-slate-200'} px-3 py-1 cursor-pointer`}>L</p>
               </div>
-              <div onClick={() => setSize(prev => prev.includes("XL") ? prev.filter(item => item !== 'XL') : [...prev, "XL"])}>
-                <p className={` ${size.includes("XL") ? 'bg-black text-white' : 'bg-slate-200'}  px-3 py-1 cursor-pointer`}>XL</p>
+              <div onClick={() => setSizes(prev => prev.includes("XL") ? prev.filter(item => item !== 'XL') : [...prev, "XL"])}>
+                <p className={` ${sizes.includes("XL") ? 'bg-black text-white' : 'bg-slate-200'}  px-3 py-1 cursor-pointer`}>XL</p>
               </div>
-              <div onClick={() => setSize(prev => prev.includes("XXL") ? prev.filter(item => item !== 'XXL') : [...prev, "XXL"])}>
-                <p className={` ${size.includes("XXL") ? 'bg-black text-white' : 'bg-slate-200'}  px-3 py-1 cursor-pointer`}>XXL</p>
+              <div onClick={() => setSizes(prev => prev.includes("XXL") ? prev.filter(item => item !== 'XXL') : [...prev, "XXL"])}>
+                <p className={` ${sizes.includes("XXL") ? 'bg-black text-white' : 'bg-slate-200'}  px-3 py-1 cursor-pointer`}>XXL</p>
               </div>
 
 

@@ -1,8 +1,14 @@
 import React, { useState } from 'react'
+import { useContext } from 'react'
+import { ShopContext } from '../context/ShopContext'
+import toast from 'react-hot-toast'
+// import axios from 'axios'
+import { useEffect } from 'react'
 
 const Login = () => {
 
   const [currentState , setCurrentState] = useState('Login')
+  const {token, setToken, navigate, backendUrl} = useContext(ShopContext)
 
   const [formData, setFormData] = useState({
     username: '',
@@ -10,10 +16,44 @@ const Login = () => {
     email : ''
   }) 
 
-  const onSubmitHandler = (e)=>{
+  const onSubmitHandler = async(e)=>{
     e.preventDefault()
 
+    try {
+        if(currentState === 'Sign Up'){
+          // const response = await axios.post(backendUrl + 'api/user/register', {name, email, password})
+          // if(response.data.success){
+          //   setToken(response.data.token)
+          //   localStorage.setItem('token', response.data.token)
+          // }else{
+          //   toast.error(response.data.message)
+          // }
+        }else{
+          // const response = await axios.post(backendUrl + 'api/user/login', { email, password})
+          // if(response.data.success){
+          //   setToken(response.data.token)
+          //   localStorage.setItem('token', response.data.token)
+          // }else{
+          //   toast.error(response.data.message)
+          // }
+        }
+    } catch (error) {
+        console.log(error)
+        toast.error(error.message)
+    }
   }
+
+  useEffect(()=> {
+    if(token){
+      navigate('/')
+    }
+  }, [token])
+
+  useEffect(()=> {
+    if(!token && localStorage.getItem('token')){
+      setToken(localStorage.getItem('token'))
+    }
+  }, [])
   
   
   const changeHandler = (e)=>{
@@ -21,54 +61,7 @@ const Login = () => {
 
   }
 
-  const login = async ()=>{
-    console.log('Login function ')
 
-    let responseData
-
-    await fetch('http://localhost:3000/login', {
-      method : 'POST',
-      headers : {
-        Accept  : 'application/form-data',
-        'Content-Type' : 'application/json'
-      },
-      body: JSON.stringify(formData),
-    }).then((res)=> res.json()).then((data)=> responseData=data)
-
-
-    if(responseData.success ){
-      localStorage.setItem('auth-token', responseData.token)
-      window.location.replace('/')
-    }else{
-      alert(responseData.errors)
-    }
-  }
-
-
-
-  const signup = async ()=>{
-    console.log('singup function')
-
-    let responseData
-
-    await fetch('http://localhost:3000/signup', {
-      method : 'POST',
-      headers : {
-        Accept  : 'application/form-data',
-        'Content-Type' : 'application/json'
-      },
-      body: JSON.stringify(formData),
-    }).then((res)=> res.json()).then((data)=> responseData = data)
-
-
-    if(responseData.success ){
-      localStorage.setItem('auth-token', responseData.token)
-      window.location.replace('/')
-    }else{
-      alert(responseData.errors)
-    }
-
-  }
 
   return (
     <form onSubmit={onSubmitHandler} className='flex flex-col items-center w-[90%] sm:max-w-96 m-auto mt-14 gap-4 text-gray-800'>
@@ -88,7 +81,7 @@ const Login = () => {
             : <p onClick={()=> setCurrentState('Login')} className='cursor-pointer'>Login Here </p>
           }
       </div>
-      <button onClick={()=> {currentState === 'Login' ? login(): signup()}} className='bg-black text-white font-light px-8 py-2 mt-4'>{currentState === 'Login'? 'Sign In' : 'Sign Up'}</button>
+      <button className='bg-black text-white font-light px-8 py-2 mt-4'>{currentState === 'Login'? 'Sign In' : 'Sign Up'}</button>
     </form>
   )
 }

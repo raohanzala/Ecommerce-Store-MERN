@@ -51,13 +51,13 @@ const ProductItem = ({ id, description, size, image, name, new_price, old_price 
 
 
   return (
-    <div className='flex relative flex-col text-gray-700 cursor-pointer bg-white overflow-hidden border hover:shadow-lg transform transition-transform duration-500 '>
+    <div className='flex relative flex-col text-gray-700 cursor-pointer border rounded-lg bg-white overflow-hidden transform transition-transform duration-500 '>
 
       <Link
         to={`/product/${id}`}
       >
-        <div className='absolute top-2 left-2 bg-[red] flex items-center justify-center text-white p-1 px-2 text-xs font-bold z-10 rounded-sm'>
-          {offer}% Off
+        <div className='absolute top-2 left-2 bg-[#e6bf5d] flex items-center justify-center shadow-md text-white w-10 h-10 text-xs font-bold z-10 rounded-full'>
+          {offer}%
         </div>
 
         <div className='overflow-hidden'>
@@ -76,7 +76,7 @@ const ProductItem = ({ id, description, size, image, name, new_price, old_price 
           </div>
         </div>
       </Link>
-      <button className='bg- py-2 text-xs bg-[#cba135] font-semibold text-gray-50' onClick={() => (addToCart(id, size))}>ADD TO CART</button>
+      {/* <button className='bg- py-2 text-xs bg-[#cba135] font-semibold text-gray-50' onClick={() => (addToCart(id, size))}>ADD TO CART</button> */}
     </div>
   );
 }

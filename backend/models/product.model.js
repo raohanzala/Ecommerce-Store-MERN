@@ -3,12 +3,14 @@ import mongoose from "mongoose";
 const productSchema = new mongoose.Schema({
   name : {type : String , required : true},
   description : { type : String, required : true},
-  price : {type : Number, required : true},
+  old_price : {type : Number},
+  new_price : {type : Number, required : true},
   image : {type : Array},
-  categorry : {type : String, required : true},
-  subCategory : {type : String, required : true},
+  category : {type : String, required : true},
+  sub_category : {type : String, required : true},
   sizes : {type : Array},
-  bestSeller : {type : Boolean},
+  bestseller : {type : Boolean},
+  availibility : {type : Boolean, required : true},
   date : {type : Number, required : true}
 })
 

@@ -5,7 +5,7 @@ import AddProduct from '../components/AddProduct';
 import ListProduct from '../components/ListProduct';
 import Orders from '../components/Orders';
 
-const Admin = () => {
+const Admin = ({token}) => {
   return (
     <div className="flex bg-gray-100">
 
@@ -13,10 +13,10 @@ const Admin = () => {
       
       <div className='p-5'>
         <Routes>
-          <Route path="addproduct" element={<AddProduct />} />
-          <Route path="listproduct" element={<ListProduct />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="/" element={<AddProduct />} /> {/* Default route */}
+          <Route path="addproduct" element={<AddProduct  token={token} />} />
+          <Route path="listproduct" element={<ListProduct token={token} />} />
+          <Route path="orders" element={<Orders token={token} />} />
+          <Route path="/" element={<AddProduct token={token} />} /> {/* Default route */}
         </Routes>
       </div>
     </div>

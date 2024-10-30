@@ -1,33 +1,52 @@
 import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import { assets } from '../../../frontend/src/assets/assets'
+import { backendUrl } from '../App'
+import { toast } from 'react-toastify'
 
-const ListProduct = () => {
+const ListProduct = ({token}) => {
 
   const [allproducts, setAllProducts] = useState([])
   console.log(allproducts)
 
-  const fetchInfo = async () => {
-    await fetch('http://localhost:3000/allproducts')
-      .then((res) => res.json())
-      .then((data) => { setAllProducts(data) })
+  const fetchList = async () => {
+
+    try {
+        const response = axios.get(backendUrl + '/api/product/list')
+        if( response.data.success){
+          setAllProducts(response.data.products)
+        }else{
+          toast.error(response.data.message)
+        }
+    } catch (error) {
+        console.log(error)
+        toast.error(error.message)
+    }
+
+  }
+
+  const removeProduct= async (id)=> {
+      try {
+          const response = await axios.post(backendUrl + '/api/product/remove', {id}, {headers: {token}} )
+
+          if( response.data.success){
+            toast.success(response.data.message)
+            await fetchList
+          }else{
+            toast.error(response.data.message)
+          }
+
+      } catch (error) {
+        console.log(error)
+        toast.error(error.message)
+      }
   }
 
   useEffect(() => {
-    fetchInfo()
+    fetchList()
   }, [])
 
 
-  const remove_product = async (id) => {
-    await fetch('http://localhost:3000/removeproduct', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ id: id })
-    })
-    await fetchInfo()
-  }
   return (
     <div className=' bg-white shadow-lg p-5 max-w-[800px]'>
       <h1 className='mb-7 text-2xl text-gray-600 uppercase '>All Product</h1>
@@ -48,11 +67,11 @@ const ListProduct = () => {
         return (
         <div key={index} className='grid grid-cols-[0.5fr_2fr_1fr_1fr_0.5fr_0.5fr] p-3 w-full items-center text-center gap-10 border'>
           <p>{index + 1}</p>
-          <img src={product.image} className='w-14 h-14 m-auto object-cover' alt={'omega'} />
+          <img src={product.image[0]} className='w-14 h-14 m-auto object-cover' alt={product.name} />
           <p> {product.name}</p>
           <p> {product.category}</p>
           <p>{product.new_price}</p>
-          <h3 onClick={() => remove_product(product._id)}>Delete</h3>
+          <h3 onClick={() => removeProduct(product._id)}>Delete</h3>
 
         </div>
         )

@@ -7,7 +7,7 @@ const CategoryItem = ({ category }) => {
   return (
     <div className='relative group'>
       <Link to={`/product/${78}`} className='block overflow-hidden shadow-lg  hover:tracking-wider duration-500'>
-        <div className='overflow-hidden h-36 md:h-48 lg:h-60'>
+        <div className='overflow-hidden max-h-28'>
           <img
             src={assets.rolex_yatch_master_1}
             alt={category}

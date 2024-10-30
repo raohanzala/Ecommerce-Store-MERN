@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import Title from './Title'
 import ProductItem from './ProductItem'
+import { assets } from '../assets/assets'
 
 const LatestCollection = ({}) => {
 
@@ -12,7 +13,7 @@ const LatestCollection = ({}) => {
 
   useEffect(() => {
     setLatestProducts(products.slice(0, 10))
-  }, [])
+  }, [products])
 
 
   return (
@@ -24,11 +25,16 @@ const LatestCollection = ({}) => {
 
       {/* Rendering Products */}
 
-      <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6'>
+      <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6'>
 
-        {latestProducts.map((item, index) => (
+        {/* {latestProducts.map((item, index) => (
           <ProductItem key={index} id={item._id} description={item.description} image={item.image} name={item.name} new_price={item.new_price} old_price={item.old_price} />
-        ))}
+        ))} */}
+
+        <ProductItem id={888998} description={'All functions working, Stainless Steel Chain, Master Lock, Chronograph working'} image={assets.omega_speedmaster} name={'Omega Speedmaster'} new_price={4500} old_price={3500}/>
+        <ProductItem id={888998} description={'All functions working, Stainless Steel Chain, Master Lock, Chronograph working'} image={assets.omega_speedmaster} name={'Omega Speedmaster'} new_price={4500} old_price={3500}/>
+        <ProductItem id={888998} description={'All functions working, Stainless Steel Chain, Master Lock, Chronograph working'} image={assets.omega_speedmaster} name={'Omega Speedmaster'} new_price={4500} old_price={3500}/>
+        <ProductItem id={888998} description={'All functions working, Stainless Steel Chain, Master Lock, Chronograph working'} image={assets.omega_speedmaster} name={'Omega Speedmaster'} new_price={4500} old_price={3500}/>
       </div>
 
     </div>

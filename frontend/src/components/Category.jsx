@@ -7,7 +7,7 @@ const Category = () => {
   const {category} = useContext(ShopContext)
   console.log(category)
   return (
-    <div className='grid grid-cols-2 max-w-[1280px] mx-auto sm:grid-cols-3 md:grid-cols-4 gap-2 gap-y-6 mt-6'>
+    <div className='grid grid-cols-2 max-w-screen-lg mx-auto sm:grid-cols-3 md:grid-cols-4 gap-5 gap-y-6 mt-6'>
 
         {category.map((item, index) => (
           <CategoryItem key={index} category={category[index]} />
