@@ -1,7 +1,7 @@
 import express from 'express'
 
-import { addToCart, updateCart, getUserCart } from '../controllers/cart.controller'
-import authUser from '../middleware/auth'
+import { addToCart, updateCart, getUserCart } from '../controllers/cart.controller.js'
+import authUser from '../middleware/auth.js'
 
 const cartRouter = express.Router()
 

@@ -92,6 +92,10 @@ import razorpay_logo from './razorpay_logo.png'
 import stripe_logo from './razorpay_logo.png'
 import cross_icon from './cross_icon.png'
 import upload_area from '../../../admin/src/assets/Assets/Admin_Assets/upload_area.svg'
+import bg_logo_remove from  './bg-remove-logo.png'
+import feedback_1 from './Feedbacks/feedback_2.jpeg'
+import feedback_2 from './Feedbacks/feedback_3.jpeg'
+import feedback_3 from './Feedbacks/feedback_4.jpeg'
 
 export const assets = {
     logo,
@@ -118,6 +122,10 @@ export const assets = {
     hublot_senna_1,
     rolex_yatch_master_1,
     upload_area,
+    bg_logo_remove,
+    feedback_1,
+    feedback_2,
+    feedback_3
 
 }
 

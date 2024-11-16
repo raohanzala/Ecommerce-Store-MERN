@@ -11,11 +11,11 @@ const CategoryItem = ({ category }) => {
           <img
             src={assets.rolex_yatch_master_1}
             alt={category}
-            className='w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110'
+            className='w-full h-full object-bottom object-cover transition-transform duration-500 ease-in-out group-hover:scale-110'
           />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-70 transition-opacity duration-300 group-hover:opacity-90"></div>
-        <div className="absolute flex items-center gap-1 bottom-4 left-4 text-white">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent      opacity-70 transition-opacity duration-300 group-hover:opacity-90"></div>
+        <div className="absolute flex items-center gap-1 bottom-4 left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] text-white">
           <div>
             <h2 className='text-xl md:text-2xl lg:text-xl text-gray-100 font-semibold uppercase'>{category}</h2>
           </div>

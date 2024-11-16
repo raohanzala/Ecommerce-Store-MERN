@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-// import axios from 'axios'
+import axios from 'axios'
 
 export const ShopContext = createContext()
 
@@ -19,6 +19,8 @@ const ShopContextProvider = ({ children }) => {
   const [category, setCategory] = useState(['Automatic', 'Casual', 'Formal', 'Luxury' ,'Quartz'])
   const [token, setToken] = useState('')
   const navigate = useNavigate()
+
+  console.log(category)
   
 
 
@@ -27,13 +29,15 @@ const ShopContextProvider = ({ children }) => {
 
   const getProductsData = async()=> {
     try {
-        // const response = await axios.get(backendUrl + '/api/product/list')
+        const response = await axios.get(backendUrl + '/api/product/list')
 
-        // if(response.data.success){
-        //   setProducts(response.data.products)
-        // }else{
-        //   toast.error(response.data.message)
-        // }
+        if(response.data.success){
+          setProducts(response.data.products)
+          console.log(response);
+          
+        }else{
+          toast.error(response.data.message)
+        }
     } catch (error) {
         console.log(error)
         toast.error(error.message)
@@ -75,8 +79,6 @@ const ShopContextProvider = ({ children }) => {
           toast.error(error.message)
       }
     }
-
-
   };
 
 

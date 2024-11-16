@@ -19,7 +19,7 @@ a.active hr{
 }
 
 /* Add this to your global CSS or Tailwind's custom styles */
-.swiper-button-next,
+/* .swiper-button-next,
 .swiper-button-prev {
   color: #cba135 !important; 
   background: rgba(0, 0, 0, 0.45);
@@ -42,7 +42,7 @@ a.active hr{
 
 .swiper-pagination-bullet-active {
   background-color: #cba135 !important; 
-}
+} */
 
 
 .no-scroll {

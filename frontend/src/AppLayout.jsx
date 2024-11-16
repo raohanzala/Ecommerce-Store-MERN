@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import SearchBar from './components/SearchBar';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import NavbarBlack from './components/NavBar/NavbarBlack';
 
 const AppLayout = ({ children }) => {
 

@@ -3,8 +3,11 @@ import { ShopContext } from '../context/ShopContext'
 import Title from './Title'
 import ProductItem from './ProductItem'
 import { assets } from '../assets/assets'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation, Autoplay } from "swiper/modules";
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 
-const LatestCollection = ({}) => {
+const LatestCollection = ({ }) => {
 
   const { products } = useContext(ShopContext)
   console.log(products)
@@ -15,6 +18,8 @@ const LatestCollection = ({}) => {
     setLatestProducts(products.slice(0, 10))
   }, [products])
 
+  console.log(products)
+
 
   return (
     <div className='my-10'>
@@ -23,18 +28,35 @@ const LatestCollection = ({}) => {
         <p className='w-3/4 m-auto text-xs sm:text-sm md:text-base text-gray-600'>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vitae, voluptates!</p>
       </div>
 
-      {/* Rendering Products */}
 
-      <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6'>
-
-        {/* {latestProducts.map((item, index) => (
-          <ProductItem key={index} id={item._id} description={item.description} image={item.image} name={item.name} new_price={item.new_price} old_price={item.old_price} />
-        ))} */}
-
-        <ProductItem id={888998} description={'All functions working, Stainless Steel Chain, Master Lock, Chronograph working'} image={assets.omega_speedmaster} name={'Omega Speedmaster'} new_price={4500} old_price={3500}/>
-        <ProductItem id={888998} description={'All functions working, Stainless Steel Chain, Master Lock, Chronograph working'} image={assets.omega_speedmaster} name={'Omega Speedmaster'} new_price={4500} old_price={3500}/>
-        <ProductItem id={888998} description={'All functions working, Stainless Steel Chain, Master Lock, Chronograph working'} image={assets.omega_speedmaster} name={'Omega Speedmaster'} new_price={4500} old_price={3500}/>
-        <ProductItem id={888998} description={'All functions working, Stainless Steel Chain, Master Lock, Chronograph working'} image={assets.omega_speedmaster} name={'Omega Speedmaster'} new_price={4500} old_price={3500}/>
+      <div className="relative group">
+        <Swiper
+          modules={[Navigation, Autoplay]}
+          spaceBetween={10}
+          slidesPerView={5}
+          navigation={{
+            prevEl: ".custom-prev",
+            nextEl: ".custom-next",
+          }}
+          autoplay={{ delay: 1500 }}
+          >
+          
+          {latestProducts.map((item, index) => (
+            <SwiperSlide key={index}>
+              <ProductItem key={index} id={item._id} description={item.description} image={item.image} name={item.name} new_price={item.new_price} old_price={item.old_price} />
+            </SwiperSlide>
+            ))}
+        </Swiper>
+        <div className="custom-prev custom-prev opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
+          <button className="absolute text-2xl z-30 text-[#cba135]  p-1 rounded-full -left-2 top-1/2 transform -translate-y-1/2 ">
+            <IoIosArrowBack />
+          </button>
+        </div>
+        <div className=" custom-next custom-prev opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
+          <button className="absolute text-2xl z-30  p-1 rounded-full -right-2 text-[#cba135] top-1/2 transform -translate-y-1/2 ">
+            <IoIosArrowForward />
+          </button>
+        </div>
       </div>
 
     </div>

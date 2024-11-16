@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { assets } from '../../../frontend/src/assets/assets'
 import { backendUrl } from '../App'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast';
 
 const ListProduct = ({token}) => {
 

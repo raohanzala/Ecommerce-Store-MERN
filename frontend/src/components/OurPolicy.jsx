@@ -31,6 +31,13 @@ const OurPolicy = () => {
         <p className='font-semibold text-[#cba035a6]'>Best Customer Support</p>
         <p className='text-gray-400'> We provide 24/7 cusotmer support</p>
       </div>
+      <div>
+        <div className='text-6xl inline-block m-auto mb-4'>
+        <BiSupport/>
+        </div>
+        <p className='font-semibold text-[#cba035a6]'>Best Customer Support</p>
+        <p className='text-gray-400'> We provide 24/7 cusotmer support</p>
+      </div>
 
     </div>
   )

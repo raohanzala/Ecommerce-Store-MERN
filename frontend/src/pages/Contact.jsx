@@ -2,6 +2,7 @@ import React from 'react'
 import Title from '../components/Title'
 import { assets } from '../assets/assets'
 import NewsLetterBox from '../components/NewsLetterBox'
+import SignupEmail from '../components/SignupEmail'
 
 const Contact = () => {
   return (
@@ -21,7 +22,7 @@ const Contact = () => {
           <button className='border border-black px-8 py-4 text-sm hover:bg-[#cba035a6] hover:border-opacity-0 hover:text-white transition-all duration-500'>Explore Jobs</button>
         </div>
       </div>
-      <NewsLetterBox />
+      <SignupEmail />
     </div>
   )
 }

@@ -15,7 +15,7 @@ const uploadArray = [
 
 productRouter.post('/add', adminAuth,upload.fields(uploadArray) , addProduct)
 productRouter.post('/remove', adminAuth,removeProduct)
-productRouter.post('single', singleProduct)
+productRouter.post('/single', singleProduct)
 productRouter.get('/list', listProduct)
 
 export default productRouter
