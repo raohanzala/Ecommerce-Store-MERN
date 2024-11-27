@@ -1,13 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Login from './components/Login';
 import { Toaster } from 'react-hot-toast';
 
 import { Suspense } from 'react';
-import LoadingLogo from './components/LoadingLogo';
 import AppLayout from './pages/AppLayout';
 import Dashboard from './pages/Dashboard';
-import Settings from './pages/Settings';
+import Profile from './pages/Profile';
 import ListProduct from './components/ListProduct';
 import Orders from './pages/Orders';
 import AddProduct from './components/AddProduct';
@@ -21,25 +20,22 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem('token')? localStorage.getItem('token') : '')
 
   useEffect(()=> {
-    // localStorage.removeItem('token');
     localStorage.setItem('token', token)
   }, [token])
 
 
-  console.log(token ? 'Token is present' : 'No token found');
-  
-
+  console.log(token);
   return (
     <div className='h-screen bg-[#f6f9ff]'>
       {token ? 
       <AppLayout>
       <Suspense fallback={<Loader />}>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/add" element={< AddProduct/>} />
-          <Route path="/list" element={< ListProduct/>} />
-          <Route path="/orders" element={< Orders/>} />
-          <Route path="/settings" element={< Settings/>} />
+          <Route path="/" element={<Dashboard  />} />
+          <Route path="/add" element={< AddProduct token={token}/>} />
+          <Route path="/list" element={< ListProduct token={token}/>} />
+          <Route path="/orders" element={< Orders token={token}/>} />
+          <Route path="/profile" element={< Profile/>} />
         </Routes>
       </Suspense>
     </AppLayout> : <Login setToken={setToken}/> }

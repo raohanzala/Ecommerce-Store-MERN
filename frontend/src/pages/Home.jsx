@@ -15,19 +15,19 @@ const Home = () => {
   return (
     <div>
 
-      <Hero/>
-    <div className='max-w-screen-xl mx-auto px-5'>
+      <Hero />
+      <div className='max-w-screen-xl mx-auto px-5'>
 
-      <Category/>
-      <LatestCollection/>
+        <Category />
+        <LatestCollection />
+        <BestSeller />
 
-      <BestSeller/>
-    </div>
-      <CategoryCollection/>
+      </div>
+      <CategoryCollection />
       {/* <OurPolicy/> */}
-      <TestimonialSection/>
-      <ServiceSection/>
-      <SignupEmail/>
+      <TestimonialSection />
+      <ServiceSection />
+      <SignupEmail />
     </div>
   )
 }

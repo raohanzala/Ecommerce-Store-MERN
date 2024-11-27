@@ -133,23 +133,25 @@ const Collection = () => {
 
         {/* Map Products */}
         <div className='relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6'>
-        {filterProducts.length > 0 ? (
+        {filterProducts.length > 0 && (
             filterProducts.map((item) => (
               <ProductItem
                 key={item._id} 
                 name={item.name}
                 description={item.description}
-                new_price={item.new_price}
-                old_price={item.old_price}
+                new_price={item.newPrice}
+                old_price={item.oldPrice}
                 id={item._id}
                 image={item.image}
                 size={item.sizes}
               />
             ))
-          ) : (
-            <LoadingSpinner />
           )}
         </div>
+
+        
+            <LoadingSpinner />
+          
       </div>
     </div>
   );

@@ -7,7 +7,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import SearchBar from './components/SearchBar';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import NavbarBlack from './components/NavBar/NavbarBlack';
 
 const AppLayout = ({ children }) => {
 
@@ -23,7 +22,7 @@ const AppLayout = ({ children }) => {
 
 
   return (
-    < div>
+    <div>
       <Navbar setShowSearch={setShowSearch} showSearch={showSearch} />
       {showSearch && <SearchBar  setShowSearch={setShowSearch}/>}
 

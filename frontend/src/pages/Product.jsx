@@ -12,10 +12,6 @@ const Product = () => {
   const [productData, setProductData] = useState(null)
   const [image, setImage] = useState('')
   const [size, setSize] = useState('')
-  const [quantity, setQuantity] = useState(1) // Added quantity state
-
-
-  console.log(productData)
 
   const fetchProductData = async () => {
     products.map((item) => {
@@ -27,19 +23,10 @@ const Product = () => {
     })
   }
 
+
   useEffect(() => {
     fetchProductData()
   }, [productId, products])
-
-  // Handle quantity increment
-  const incrementQuantity = () => {
-    setQuantity(prevQuantity => prevQuantity + 1)
-  }
-
-  // Handle quantity decrement
-  const decrementQuantity = () => {
-    setQuantity(prevQuantity => (prevQuantity > 1 ? prevQuantity - 1 : 1))
-  }
 
   if (!productData) {
     return <LoadingSpinner />;
@@ -65,7 +52,7 @@ const Product = () => {
             }
           </div>
           <div className='w-full sm:w-[80%] h-[620px]'>
-            <img className='w-full h-full object-cover rounded-md shadow-md' src={image} alt="Product Image" />
+            <img className='w-full h-full object-cover rounded-md' src={image} alt="Product Image" />
           </div>
         </div>
 
@@ -81,8 +68,8 @@ const Product = () => {
           </div>
           <div className='flex gap-5'>
 
-          <p className='mt-5 text-xl text-gray-400 line-through'>{currency} {productData.new_price}</p>
-          <p className='mt-5 text-lg font-medium text-[primary]'>{currency}{productData.old_price}</p>
+          <p className='mt-5 text-xl text-gray-400 line-through'>{currency} {productData.newPrice}</p>
+          <p className='mt-5 text-lg font-medium text-[primary]'>{currency}{productData.oldPrice}</p>
           </div>
           <p className='mt-5 text-gray-500 md:w-4/5'>{productData.description}</p>
 
@@ -97,35 +84,7 @@ const Product = () => {
               </div>
             </div>)}
 
-          {/* Quantity Selector */}
-          <div className='flex flex-col gap-4 my-8'>
-            <p className='text-lg font-semibold text-gray-700'>Select Quantity</p>
-            <div className='flex items-center border border-gray-300 rounded-md overflow-hidden w-max'>
-              <button
-                onClick={decrementQuantity}
-                className='bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold p-2 transition duration-200 ease-in-out'
-              >
-                -
-              </button>
-              <input
-                type='text'
-                value={quantity}
-                readOnly
-                className='w-12 text-center text-lg font-medium bg-white border-x border-gray-300 py-2 px-4'
-              />
-              <button
-                onClick={incrementQuantity}
-                className='bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold p-2 transition duration-200 ease-in-out'
-              >
-                +
-              </button>
-            </div>
-          </div>
-
-
-
-
-          <button onClick={() => (addToCart(productData._id, size, quantity))} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
+          <button onClick={() => (addToCart( productData._id, size ))} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
           <hr className='mt-8 sm:w-4/5 ' />
           <div className='tedxt-sm text-gray-500 mt-5  flex flex-col gap-1'>
             <p>100% Original product.</p>

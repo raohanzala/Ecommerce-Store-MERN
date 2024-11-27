@@ -1,12 +1,11 @@
-import React from 'react'
+import React from "react";
 
-const LoadingSpinner = () => {
+function LoadingSpinner() {
   return (
-    <div className="absolute w-full  flex translate-y-[50%] items-center justify-center">
-      <div className="animate-spin rounded-full h-28 w-28 border-t-4 border-b-4 border-gold"></div>
-      <p className='absolute text-xs text-center'>Unable to fetch <br /> products.</p>
+    <div className="flex items-center justify-center min-h-screen bg-white z-50">
+      <div className="w-12 h-12 border-4 border-[#e2c765] border-solid rounded-full animate-spin border-t-transparent"></div>
     </div>
-  )
+  );
 }
 
-export default LoadingSpinner
+export default LoadingSpinner;

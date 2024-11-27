@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { RiSearchLine } from "react-icons/ri";
 
-const SearchSortBar = ({ placeholder, options }) => {
+const SearchSortBar = ({ placeholder, options, className}) => {
   const [sortBy, setSortBy] = useState("name");
 
   const handleSortChange = (event) => {
@@ -9,15 +9,15 @@ const SearchSortBar = ({ placeholder, options }) => {
   };
 
   return (
-    <div className="w-full flex justify-between mb-12">
-      <div className="flex items-center border border-gray-300 bg-white rounded-md overflow-hidden focus-within:shadow-md transition-shadow duration-300 ">
-        <span className="flex items-center pl-3">
+    <div className={`w-full flex justify-between ${className}`} >
+      <div className="flex items-center border border-gray-300 bg-white rounded-md overflow-hidden">
+        <span className="flex items-center pl-3 text-[#5c5c5c]">
           <RiSearchLine />
         </span>
         <input
-          className="py-3 px-2 text-sm w-64 focus:outline-none shadow-sm"
+          className="py-[10px] px-2 text-sm w-64 focus:outline-none shadow-sm"
           type="text"
-          placeholder={placeholder + "..."}
+          placeholder={placeholder}
         />
       </div>
 
@@ -25,10 +25,10 @@ const SearchSortBar = ({ placeholder, options }) => {
         <select
           value={sortBy}
           onChange={handleSortChange}
-          className=" border border-gray-300 py-3 px-2 pl-2 bg-white rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-300 transition duration-200"
+          className=" border border-gray-300 py-[10px] px-2 pl-2 bg-white rounded-md shadow-sm focus:outline-none text-sm"
         >
           {options.map((option) => (
-            <option value={option}>
+            <option key={option} value={option}>
               Sort by {option}
             </option>
           ))}

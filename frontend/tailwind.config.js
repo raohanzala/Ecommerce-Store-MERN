@@ -21,8 +21,11 @@ export default {
         }
       },
       colors: {
-        gold: '#C1A14B',
-        primary : "#cba135",
+        'primary': '#e2c765',
+        'white': '#ffffff', // Default white (optional)
+        'charcoal-gray': '#2e2e2e',
+        'button-cta': '#c7a647',
+        'link-icons': '#6574e2',
       },
     },
   },

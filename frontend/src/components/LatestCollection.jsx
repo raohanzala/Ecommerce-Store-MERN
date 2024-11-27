@@ -43,7 +43,7 @@ const LatestCollection = ({ }) => {
           
           {latestProducts.map((item, index) => (
             <SwiperSlide key={index}>
-              <ProductItem key={index} id={item._id} description={item.description} image={item.image} name={item.name} new_price={item.new_price} old_price={item.old_price} />
+              <ProductItem key={index} id={item._id} description={item.description} image={item.image} name={item.name} newPrice={item.newPrice} oldPrice={item.oldPrice} />
             </SwiperSlide>
             ))}
         </Swiper>

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import RecentOrderSection from "../components/RecentOrderSection";
+import { ShopContext } from "../contexts/ShopContext";
 // import ChartLine from "../components/ChartLine";
 // import ChartBar from "../components/ChartBar";
 // import RecentPosts from "../components/RecentPostsSection";
@@ -7,6 +8,13 @@ import RecentOrderSection from "../components/RecentOrderSection";
 
 function Dashboard() {
   console.log("sddsdsdsds");
+
+    const {setPageTitle} = useContext(ShopContext)
+
+    useEffect(()=> {
+      setPageTitle('Dashboard')
+    }, [])
+
   return (
     <div>
       <h2 className="text-2xl mb-8">Rao Hanzala</h2>

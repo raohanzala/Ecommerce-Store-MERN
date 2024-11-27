@@ -7,7 +7,6 @@ import LoadingLogo from './components/LoadingLogo'
 import ErrorBoundary from './components/ErrorBoundary'
 import LoadingSpinner from './components/LoadingSpinner'
 
-
 // Lazy loading components for better performance
 const Home = lazy(() => import('./pages/Home'));
 const Collection = lazy(() => import('./pages/Collection'));
@@ -19,9 +18,6 @@ const Login = lazy(() => import('./pages/Login'));
 const PlaceOrder = lazy(() => import('./pages/PlaceOrder'));
 const Orders = lazy(() => import('./pages/Order'));
 const NotFound = lazy(() => import('./components/NotFound')); // Assume you have a NotFound component
-
-
-
 
 const App = () => {
 
@@ -39,10 +35,11 @@ const App = () => {
   return (
     <div>
       <div>
-        {loading ? (<LoadingLogo />) : (
-          <AppLayout>
+        {loading ?  <LoadingLogo/>  
+       : ( <AppLayout>
+
+          {/* <Suspense fallback={<LoadingLogo />}> */}
             <ErrorBoundary>
-              <Suspense fallback={<LoadingSpinner />}>
                 <Routes>
                   <Route path='/' element={<Home />} />
                   <Route path='/collection' element={<Collection />} />
@@ -55,10 +52,10 @@ const App = () => {
                   <Route path='/orders' element={<Orders />} />
                   <Route path='*' element={<NotFound/>} />
                 </Routes>
-              </Suspense>
             </ErrorBoundary>
-          </AppLayout>
-        )}
+          </AppLayout>)
+    
+            }
       <Toaster
         position='top-center'
         gutter={12}

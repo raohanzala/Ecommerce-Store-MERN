@@ -25,8 +25,8 @@ const placeOrder = async(req, res)=> {
       res.json({success : false, message : error.message})
   }
 }
-const allOrders = async(req, res)=> {
 
+const allOrders = async(req, res)=> {
   try {
       const orders = await orderModel.find({})
       res.json({success : true, orders})
@@ -34,8 +34,8 @@ const allOrders = async(req, res)=> {
     console.log(error)
     res.json({success : false, message : error.message})
   }
-
 }
+
 const userOrders = async(req, res)=> {
   try {
       const {userId} = req.body

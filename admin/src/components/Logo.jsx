@@ -1,5 +1,5 @@
 import React from 'react'
-import { assets } from '../../../frontend/src/assets/assets'
+import LogoImg  from '../assets/image.png'
 import {Link} from 'react-router-dom'
 
 // import { BsEnvelope } from "react-icons/bs";
@@ -10,9 +10,8 @@ import {Link} from 'react-router-dom'
 const Logo = () => {
   return (
     <div className=''>
-
 <Link to={'/'}>
-     <img src={assets.logo} className=' md:w-[190px] md:h-[40px] w-[180px] h-[38px]' alt="" />
+     <img src={LogoImg} className='w-full h-12' alt="" />
 </Link>
 
       

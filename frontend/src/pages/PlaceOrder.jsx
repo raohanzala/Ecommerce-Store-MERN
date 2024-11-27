@@ -4,6 +4,7 @@ import CartTotal from '../components/CartTotal';
 import { assets } from '../assets/assets';
 import { ShopContext } from '../context/ShopContext';
 import toast from 'react-hot-toast';
+import axios from 'axios'
 
 
 const PlaceOrder = () => {
@@ -38,8 +39,20 @@ const PlaceOrder = () => {
     setFormData(data=> ({...data, [name] : value}))
   }
 
+  const order = async (orderData)=> {
+    const response = await axios.post(backendUrl+ '/api/order/place', orderData, {headers: {token}})
+    if(response.data.success){
+      setCartItems({})
+      navigate('/orders')
+    }else{
+        toast.error(response.data.message)
+    }
+  }
+
   const onSubmitHandler = async (e)=> {
     e.preventDefault()
+
+    console.log('Order working')
 
     try {
         let orderItems = []
@@ -67,13 +80,7 @@ const PlaceOrder = () => {
           // API calls for COD Method
 
           case 'cod':
-            const response = await axios.post(backendUrl+ '/api/order/place', orderData, {headers: {token}})
-            if(response.data.success){
-              setCartItems({})
-              navigate('/orders')
-            }else{
-                toast.error(response.data.message)
-            }
+            order(orderData)
             break;
             default :
             break;
@@ -81,7 +88,8 @@ const PlaceOrder = () => {
 
         console.log(orderItems)
     } catch (error) {
-      
+      console.log(error)
+        toast.error(error.message)
     }
   }
 

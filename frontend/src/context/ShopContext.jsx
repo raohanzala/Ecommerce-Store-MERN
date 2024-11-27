@@ -20,7 +20,7 @@ const ShopContextProvider = ({ children }) => {
   const [token, setToken] = useState('')
   const navigate = useNavigate()
 
-  console.log(category)
+  // console.log(category)
   
 
 
@@ -48,38 +48,50 @@ const ShopContextProvider = ({ children }) => {
     getProductsData()
   },[])
 
-  console.log(products)
+  console.log(cartItems, 'CartItems')
 
 
-  const addToCart = async (itemId, size, quantity = 1) => {
-
+  const addToCart = async (itemId, size) => {
+    console.log( "ItemId :", itemId)
     let cartData = structuredClone(cartItems);
-
-    console.log('cartItems', cartItems)
-    console.log('cartData', cartData)
-
+  
+    // Update cart data locally
     if (cartData[itemId]) {
-      if (cartData[itemId][size]) {
-        cartData[itemId][size] += quantity;
-      } else {
-        cartData[itemId][size] = quantity;
+      if(cartData[itemId][size]){
+        cartData[itemId][size] += 1
+      }else {
+        cartData[itemId][size] = 1
       }
     } else {
-      cartData[itemId] = {};
-      cartData[itemId][size] = quantity;
+      cartData[itemId]  = {};
+      cartData[itemId][size] = 1; 
     }
-
+  
     setCartItems(cartData);
-
-    if(token){
+    toast.success('Added to cart')
+  
+    // Send data to backend if token is available
+    if (token) {
       try {
-          await axios.post(backendUrl + '/api/cart/add', {itemId, size}, {headers: {token}})
+        const response = await axios.post(
+          `${backendUrl}/api/cart/add`,
+          { itemId }, // No size or quantity in the request body
+          { headers: { token } }
+        );
+        console.log(response);
       } catch (error) {
-          console.log(error)
-          toast.error(error.message)
+        console.log(error);
+        toast.error(error.message);
       }
     }
   };
+
+  useEffect(()=> {
+      console.log(cartItems)
+  }, [cartItems])
+  
+
+  
 
 
   const getCartCount = () => {
@@ -133,7 +145,7 @@ const ShopContextProvider = ({ children }) => {
       for (const item in cartItems[items]) {
         try {
           if (cartItems[items][item] > 0) {
-            totalAmount += itemInfo.new_price * cartItems[items][item]
+            totalAmount += itemInfo.newPrice * cartItems[items][item]
           }
         } catch (error) {
           console.error(`Error calculating cart amount for item ${item}`, error);

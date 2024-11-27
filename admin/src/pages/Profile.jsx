@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { ShopContext } from '../contexts/ShopContext';
 
-const Settings = () => {
+const Profile = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -8,6 +9,9 @@ const Settings = () => {
   const [image, setImage] = useState(null);
 
   const handleImageChange = (e) => {
+
+    // const {setPageTitle} = useContext(ShopContext)
+
     const file = e.target.files[0];
     if (file) {
       setImage(URL.createObjectURL(file));
@@ -24,11 +28,15 @@ const Settings = () => {
     console.log('Image:', image);
   };
 
+  // useEffect(()=> {
+  //   setPageTitle("Settings")
+  // }, [])
+
   return (
     <div className='grid grid-cols-2'>
 
     <div className="p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-2xl font-semibold mb-4">Settings</h2>
+      <h2 className="text-2xl font-semibold mb-4">Profile Setup</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
       <div className="flex items-center mt-4">
           <div className="relative w-16 h-16">
@@ -40,7 +48,7 @@ const Settings = () => {
               />
             ) : (
               <div className="w-full h-full rounded-full text-xs border-2 border-gray-300 flex items-center justify-center">
-                <span className="text-gray-400">No Image</span>
+                <span className="text-gray-400 text">No Image</span>
               </div>
             )}
           </div>
@@ -136,4 +144,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default Profile;

@@ -3,23 +3,28 @@ import { ShopContext } from '../context/ShopContext';
 import { Link } from 'react-router-dom';
 import { assets } from '../assets/assets';
 
-const ProductItem = ({ id, description, size, name, new_price, old_price }) => {
+const ProductItem = ({ id, description, size, image, name, newPrice, oldPrice }) => {
   const { currency, addToCart } = useContext(ShopContext);
 
-  const offer = Math.floor(((old_price - new_price) / old_price) * 100);
+  console.log(oldPrice, newPrice);
+  
 
-  function formatPriceInPKR(price) {
-    const priceString = price.toString();
-    const afterPoint = priceString.indexOf('.') > 0 ? priceString.substring(priceString.indexOf('.')) : '';
-    let beforePoint = priceString.indexOf('.') > 0 ? priceString.substring(0, priceString.indexOf('.')) : priceString;
+  const offer = Math.floor(((oldPrice - newPrice) / oldPrice) * 100);
+
+  // function formatPriceInPKR(price) {
+  //   console.log(price, typeof price);
     
-    const lastThree = beforePoint.substring(beforePoint.length - 3);
-    const otherNumbers = beforePoint.substring(0, beforePoint.length - 3);
+  //   // const priceString = price.toString();
+  //   const afterPoint = price.indexOf('.') > 0 ? price.substring(price.indexOf('.')) : '';
+  //   let beforePoint = price.indexOf('.') > 0 ? price.substring(0, price.indexOf('.')) : price;
     
-    const formattedPrice = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + ',' + lastThree;
+  //   const lastThree = beforePoint.substring(beforePoint.length - 3);
+  //   const otherNumbers = beforePoint.substring(0, beforePoint.length - 3);
     
-    return formattedPrice + afterPoint;
-  }
+  //   const formattedPrice = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + ',' + lastThree;
+    
+  //   return formattedPrice + afterPoint;
+  // }
   
   const shortDescription = description.length > 60 ? description.slice(0, 60) + '...' : description;
 
@@ -34,13 +39,13 @@ const ProductItem = ({ id, description, size, name, new_price, old_price }) => {
         <div className='relative w-full h-48 md:h-56 overflow-hidden'>
           {/* Default image */}
           <img
-            src={assets.rolex_yatch_master_1}
+            src={image[0]}
             className='w-full h-full object-cover transition-opacity duration-500 ease-in-out hover:opacity-0'
             alt={name}
           />
           {/* Hover image */}
           <img
-            src={assets.hublot_senna_1}
+            src={image[1]}
             className='absolute top-0 left-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out hover:opacity-100'
             alt={name}
           />
@@ -50,8 +55,8 @@ const ProductItem = ({ id, description, size, name, new_price, old_price }) => {
           <p className='text-sm tracking-wide font-semibold uppercase mb-1'>{name}</p>
           <p className='text-xs text-gray-500'>{shortDescription}</p>
           <div className='flex gap-2 justify-center items-center mt-2'>
-            <p className='text-sm text-gray-400 line-through'>{currency} {formatPriceInPKR(old_price)}</p>
-            <p className='text-lg font-semibold text-[#e6bf5d]'>{currency} {formatPriceInPKR(new_price)}</p>
+            <p className='text-sm text-gray-400 line-through'>{currency} {oldPrice}</p>
+            <p className='text-lg font-semibold text-[#e6bf5d]'>{currency} {newPrice}</p>
           </div>
         </div>
       </div>

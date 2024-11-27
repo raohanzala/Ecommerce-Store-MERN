@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { assets } from '../../../frontend/src/assets/assets';
 import axios from 'axios';
 import { backendUrl } from '../App';
+import { ShopContext } from '../contexts/ShopContext';
 
 const AddProduct = ({ token }) => {
   const [image1, setImage1] = useState(false);
@@ -11,97 +12,127 @@ const AddProduct = ({ token }) => {
   const [image4, setImage4] = useState(false);
 
   const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState('Quartz Machine, Stainless Steel Chain, Date Working, Master Lock, Best Quality.');
   const [oldPrice, setOldPrice] = useState('');
   const [newPrice, setNewPrice] = useState('');
-  const [category, setCategory] = useState('');
-  const [subCategory, setSubcategory] = useState('');
+  const [category, setCategory] = useState('men');
+  const [subCategory, setSubcategory] = useState('quartz');
   const [bestSeller, setBestSeller] = useState(false);
   const [sizes, setSizes] = useState([]);
-  const [availability, setAvailability] = useState('');
+  const [availability, setAvailability] = useState('in_stock');
+
+  const {setIsLoading, setPageTitle} = useContext(ShopContext)
 
 
   console.log(name, description, oldPrice, newPrice, category, subCategory, bestSeller, sizes, availability)
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+  
+    // Validation
+    if (!oldPrice || isNaN(Number(oldPrice))) {
+      toast.error("Please enter a valid Old Price");
+      return;
+    }
+    if (!newPrice || isNaN(Number(newPrice))) {
+      toast.error("Please enter a valid New Price");
+      return;
+    }
+    if (!subCategory) {
+      toast.error("Please select a Sub-Category");
+      return;
+    }
+    if (!availability) {
+      toast.error("Please select Availability");
+      return;
+    }
 
+    setIsLoading(true)
+  
     try {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("description", description);
-      formData.append("oldPrice", oldPrice);
-      formData.append("newPrice", newPrice);
+      formData.append("oldPrice", oldPrice); // Ensure valid number
+      formData.append("newPrice", newPrice); // Ensure valid number
       formData.append("category", category);
-      formData.append("subCategory", subCategory);
-      formData.append("bestSeller", bestSeller ? "true" : "false");
-      formData.append("availability", availability);
-      formData.append("sizes", JSON.stringify(sizes));
+      formData.append("subCategory", subCategory); // Ensure required field
+      formData.append("bestSeller", bestSeller);
+      formData.append("availibility", availability === "in_stock"); // Convert to boolean
+      formData.append("sizes", JSON.stringify(sizes)); // Ensure correct format
 
       if (image1) formData.append("image1", image1);
       if (image2) formData.append("image2", image2);
       if (image3) formData.append("image3", image3);
       if (image4) formData.append("image4", image4);
-
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
-
-      // console.log(formData);
-      
-      
-
-      const response = await axios.post(backendUrl + '/api/product/add', formData, { headers: { token } });
-
+  
+      const response = await axios.post(backendUrl + "/api/product/add", formData, {
+        headers: { token },
+      });
+  
+      console.log(response);
+  
       if (response.data.success) {
         toast.success(response.data.message);
-        // Reset form state
-        setName('');
-        setDescription('');
+        // Reset form
+        setName("");
+        setDescription("");
+        setOldPrice("");
+        setNewPrice("");
+        setCategory("");
+        setSubcategory("");
+        setAvailability("in_stock");
+        setBestSeller(false);
+        setSizes([]);
         setImage1(false);
         setImage2(false);
         setImage3(false);
         setImage4(false);
-        setOldPrice('');
-        setNewPrice('');
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
       toast.error(error.message);
+    }finally{
+      setIsLoading(false)
     }
   };
 
+  useEffect(() => {
+    setPageTitle('Add Product')
+    return () => setIsLoading(false);
+  }, [setIsLoading])
+  
   return (
     <form onSubmit={onSubmitHandler} className="max-w-screen-lg bg-white p-8 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-semibold mb-6">Add New Product</h2>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left Column */}
         <div>
           <label className="block mb-6">
             <span className="text-lg">Product Title</span>
-            <input type="text" className="w-full mt-2 p-3 border rounded focus:outline-none focus:ring focus:ring-green-200" placeholder="Enter product name" value={name} onChange={(e) => setName(e.target.value)} />
+            <input type="text" className="w-full mt-2 p-2 border rounded focus:outline-none focus:ring focus:ring-green-200" placeholder="Enter product name" value={name} onChange={(e) => setName(e.target.value)} />
           </label>
 
           <label className="block mb-6">
             <span className="text-lg">Product Description</span>
-            <textarea className="w-full mt-2 p-3 border rounded focus:outline-none focus:ring focus:ring-green-200" placeholder="Enter product description" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+            <textarea className="w-full mt-2 p-2 border rounded focus:outline-none focus:ring focus:ring-green-200" placeholder="Enter product description" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
           </label>
 
           <div className="grid grid-cols-2 gap-4 mb-4">
             <label>
               <span className="text-lg">Price</span>
-              <input type="number" className="w-full mt-2 p-3 border rounded focus:outline-none focus:ring focus:ring-green-200" placeholder="Regular price" value={oldPrice} onChange={(e) => setOldPrice(e.target.value)} />
+              <input type="number" className="w-full mt-2 p-2 border rounded focus:outline-none focus:ring focus:ring-green-200" placeholder="Regular price" min="0"
+        step="1"  value={oldPrice} onChange={(e) => setOldPrice(e.target.value)} />
             </label>
             <label>
               <span className="text-lg">Offer Price</span>
-              <input type="number" className="w-full mt-2 p-3 border rounded focus:outline-none focus:ring focus:ring-green-200" placeholder="Discounted price" value={newPrice} onChange={(e) => setNewPrice(e.target.value)} />
+              <input type="number" className="w-full mt-2 p-2 border rounded focus:outline-none focus:ring focus:ring-green-200" placeholder="Discounted price" value={newPrice} onChange={(e) => setNewPrice(e.target.value)} />
             </label>
           </div>
 
           <label className="block mb-6">
             <span className="text-lg">Availability</span>
-            <select className="w-full mt-2 p-3 border rounded focus:outline-none focus:ring focus:ring-green-200" value={availability} onChange={(e) => setAvailability(e.target.value)}>
+            <select className="w-full mt-2 p-2 border rounded focus:outline-none focus:ring focus:ring-green-200" value={availability} onChange={(e) => setAvailability(e.target.value)}>
               <option value="in_stock">In Stock</option>
               <option value="out_of_stock">Out of Stock</option>
             </select>
@@ -129,10 +160,10 @@ const AddProduct = ({ token }) => {
 <span className="text-lg">Upload Images</span>
           <div className="flex gap-2 mb-6 mt-2">
             
-            {[image1, image2, image3, image4].map((image, idx) => (
-              <label key={idx} className="cursor-pointer">
+            {[image1, image2, image3, image4].map((image, index) => (
+              <label key={index} className="cursor-pointer">
                 <img src={!image ? assets.upload_area : URL.createObjectURL(image)} alt="" className="w-24 h-24 object-cover border rounded" />
-                <input type="file" hidden onChange={(e) => [setImage1, setImage2, setImage3, setImage4][idx](e.target.files[0])} />
+                <input type="file" hidden onChange={(e) => [setImage1, setImage2, setImage3, setImage4][index](e.target.files[0])} />
               </label>
             ))}
           </div>
@@ -140,15 +171,15 @@ const AddProduct = ({ token }) => {
 
           <label className="block mb-6">
             <span className="text-lg">Category</span>
-            <select className="w-full mt-2 p-3 border rounded focus:outline-none focus:ring focus:ring-green-200" value={category} onChange={(e) => setCategory(e.target.value)}>
+            <select className="w-full mt-2 p-2 border rounded focus:outline-none focus:ring focus:ring-green-200" value={category} onChange={(e) => setCategory(e.target.value)}>
               <option value="women">Women</option>
               <option value="men">Men</option>
             </select>
           </label>
 
           <label className="block mb-6">
-            <span className="text-lg">Sub-Category</span>
-            <select className="w-full mt-2 p-3 border rounded focus:outline-none focus:ring focus:ring-green-200" value={subCategory} onChange={(e) => setSubcategory(e.target.value)}>
+            <span className="text-lg">Sub Category</span>
+            <select className="w-full mt-2 p-2 border rounded focus:outline-none focus:ring focus:ring-green-200" value={subCategory} onChange={(e) => setSubcategory(e.target.value)}>
               <option value="automatic">Automatic</option>
               <option value="quartz">Quartz</option>
               <option value="chain">Chain</option>
