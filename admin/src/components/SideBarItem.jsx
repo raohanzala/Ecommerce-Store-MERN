@@ -7,10 +7,29 @@ import {
 } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { IoMdNotificationsOutline } from "react-icons/io";
+import { useEffect } from "react";
+
+import { io } from 'socket.io-client';
+
+const socket = io('http://localhost:3001')
 
 function SideBarItem() {  
   const location = useLocation(); // To track the current route
   const [hasNotifications, setHasNotifications] = useState(true); // Notification state
+  const [notifications, setNotifications] = useState([]);
+
+  console.log('Notification', notifications)
+
+  useEffect(() => {
+    // Listen for notifications
+    socket.on('notification', (data) => {
+      console.log('Notification received:', data);
+      setNotifications((prev) => [...prev, data]);
+    });
+
+    // Cleanup listener on unmount
+    return () => socket.off('notification');
+  }, []);
 
   const sideBarItems = [
     { name: "dashboard", icon: <MdOutlineDashboard />, route: "/" },
@@ -43,7 +62,7 @@ function SideBarItem() {
             ${
               isActive 
                 ? "bg-[#4f4f4f] text-primary" // Active state background
-                : "text-[#797979] hover:text-[#e4e4e4]" // Inactive state
+                : "text-[#797979] hover:text-[#e4e4e4] " // Inactive state
             }`
           }
         >
@@ -51,7 +70,7 @@ function SideBarItem() {
           <span className="text-2xl w-fit relative">
             {item.icon}
             {/* Red badge for notifications */}
-            {item.hasNotification && item.name === "notifications" && (
+            {notifications.length > 0 && item.name === "notifications" && (
               <span className="absolute top-0 right-0 flex justify-center items-center h-2 w-2 rounded-full bg-red-500  text-white"></span>
             )}
           </span>

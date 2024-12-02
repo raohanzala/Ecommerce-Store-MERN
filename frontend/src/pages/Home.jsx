@@ -22,6 +22,7 @@ const Home = () => {
         <LatestCollection />
         <BestSeller />
 
+      {/* <MoreSection/> */}
       </div>
       <CategoryCollection />
       {/* <OurPolicy/> */}

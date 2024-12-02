@@ -12,7 +12,7 @@ const Footer = () => {
     <div className='flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 text-sm p-5 py-10 bg-[#232323]'>
 
         <div>
-          <img src={assets.logo2} className='mb-5 w-52 h-12' alt="" />
+          <img src={assets.logo4} className='mb-5 w-52 h-12' alt="" />
           <p className='w-full md:w-2/3 text-[#969696]'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illum, officia dolores labore enim dicta eveniet!</p>
         </div>
         <div>

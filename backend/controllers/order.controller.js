@@ -8,7 +8,9 @@ const placeOrder = async(req, res)=> {
 
       const orderData = {
         userId,
-        items, amount,
+        items, 
+        amount,
+        address,
         paymentMethod : "COD",
         payment : false,
         date : Date.now()
@@ -19,7 +21,7 @@ const placeOrder = async(req, res)=> {
 
       await userModel.findByIdAndUpdate(userId, {cartData : {}})
 
-      re.json({success : true, message : 'Order Placed'})
+      res.json({success : true, message : 'Order Placed'})
   } catch (error) {
       console.log(error)
       res.json({success : false, message : error.message})
@@ -51,7 +53,7 @@ const updateStatus = async(req, res)=> {
     const {orderId, status} = req.body
 
     await orderModel.findByIdAndUpdate(orderId, {status})
-    res.json({success : true, message : 'Status Updated'})
+    res.json({success : true, message : 'Status updated successfully'})
   } catch (error) {
     console.log(error)
     res.json({success : false, message : error.message})

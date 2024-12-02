@@ -52,10 +52,8 @@ const ShopContextProvider = ({ children }) => {
 
 
   const addToCart = async (itemId, size) => {
-    console.log( "ItemId :", itemId)
     let cartData = structuredClone(cartItems);
   
-    // Update cart data locally
     if (cartData[itemId]) {
       if(cartData[itemId][size]){
         cartData[itemId][size] += 1
@@ -68,16 +66,19 @@ const ShopContextProvider = ({ children }) => {
     }
   
     setCartItems(cartData);
-    toast.success('Added to cart')
-  
-    // Send data to backend if token is available
+    
+    console.log(itemId, size , 'Item Id and Size')
+    
     if (token) {
       try {
         const response = await axios.post(
           `${backendUrl}/api/cart/add`,
-          { itemId }, // No size or quantity in the request body
+          { itemId, size }, 
           { headers: { token } }
         );
+        if(response.data.success){
+          toast.success(response.data.message)
+        }
         console.log(response);
       } catch (error) {
         console.log(error);
@@ -90,10 +91,6 @@ const ShopContextProvider = ({ children }) => {
       console.log(cartItems)
   }, [cartItems])
   
-
-  
-
-
   const getCartCount = () => {
     return Object.values(cartItems).reduce((total, sizes) => {
       return total + Object.values(sizes).reduce((count, qty) => count + qty, 0);

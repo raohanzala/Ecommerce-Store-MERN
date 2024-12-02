@@ -10,6 +10,7 @@ import Profile from './pages/Profile';
 import ListProduct from './components/ListProduct';
 import Orders from './pages/Orders';
 import AddProduct from './components/AddProduct';
+import Notifications from './pages/Notifications';
 import Loader from './components/Loader';
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL
@@ -31,10 +32,11 @@ function App() {
       <AppLayout>
       <Suspense fallback={<Loader />}>
         <Routes>
-          <Route path="/" element={<Dashboard  />} />
+          <Route path="/" element={<Dashboard token={token} />} />
           <Route path="/add" element={< AddProduct token={token}/>} />
           <Route path="/list" element={< ListProduct token={token}/>} />
           <Route path="/orders" element={< Orders token={token}/>} />
+          <Route path="/notifications" element={< Notifications token={token}/>} />
           <Route path="/profile" element={< Profile/>} />
         </Routes>
       </Suspense>

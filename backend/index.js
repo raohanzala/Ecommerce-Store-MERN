@@ -1,328 +1,145 @@
-import express from 'express'
-import cors from 'cors'
-import 'dotenv/config.js'
-import connectDB from './config/mongoDB.js'
-import connectCloudinary from './config/cloudinary.js'
-import userRouter from './routes/user.routes.js'
-import productRouter from './routes/product.routes.js'
-import cartRouter from './routes/cart.routes.js'
-import orderRouter from './routes/order.routes.js'
+// import express from 'express'
+// import cors from 'cors'
+// import 'dotenv/config.js'
+// import connectDB from './config/mongoDB.js'
+// import connectCloudinary from './config/cloudinary.js'
+// import userRouter from './routes/user.routes.js'
+// import productRouter from './routes/product.routes.js'
+// import cartRouter from './routes/cart.routes.js'
+// import orderRouter from './routes/order.routes.js'
 
-const app = express()
-const port = process.env.PORT || 4000
-connectDB()
-connectCloudinary()
-
-
-// middleware
-app.use(express.json())
-app.use(cors())
+// const app = express()
+// const port = process.env.PORT || 4000
+// connectDB()
+// connectCloudinary()
 
 
-// API Creation
-app.use('/api/user', userRouter)
-app.use('/api/product', productRouter)
-app.use('/api/cart', cartRouter)
-app.use('/api/order', orderRouter)
+// // middleware
+// app.use(express.json())
+// app.use(cors())
 
 
-
-app.get('/', (req, res) => {
-  res.send('Express App is Running')
-})
-
-app.listen(port, (error) => {
-    if (!error) {
-      console.log(`Server running on port ${port}`)
-    } else {
-      console.log(`Error ${error}`)
-    }
-  })
+// // API Creation
+// app.use('/api/user', userRouter)
+// app.use('/api/product', productRouter)
+// app.use('/api/cart', cartRouter)
+// app.use('/api/order', orderRouter)
 
 
 
-
-
-// ================== Prevoius Code =========================
-
-// Image Storage Engine
-
-// const storage = multer.diskStorage({
-//   destination: './upload/images',
-//   filename: (req, file, cb) => {
-//     return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
-//   }
+// app.get('/', (req, res) => {
+//   res.send('Express App is Running')
 // })
-
-
-// const upload = multer({ storage: storage })
-
-
-// // Creating Upload End Point for images
-// app.use('/images', express.static('upload/images'))
-// app.post('/upload', upload.single('product'), (req, res) => {
-//   console.log('Upload route hit');
-//   if (req.file) {
-//     console.log('File uploaded:', req.file);
-//   } else {
-//     console.log('No file uploaded');
-//   }
-//   res.json({  
-//     success: 1,
-//     image_url: `http://localhost:${port}/images/${req.file.filename}`
-//   })
-// })
-
-// const Product = mongoose.model('Product', {
-//   id: {
-//     type: Number,
-//     required: true
-//   },
-//   name: {
-//     type: String,
-//     required: true
-//   },
-//   description: {
-//     type: String,
-//     required: true
-//   },
-//   image: {
-//     type: Array,
-//     required: true
-//   },
-//   sizes: {
-//     type: Array,
-//     required: false
-//   },
-//   category: {
-//     type: String,
-//     required: true
-//   },
-//   sub_category: {
-//     type: String,
-//     required: true
-//   },
-//   new_price: {
-//     type: Number,
-//     required: true
-//   },
-//   old_price: {
-//     type: Number,
-//     required: true
-//   },
-//   date: {
-//     type: Date,
-//     default: Date.now,
-//   },
-//   available: {
-//     type: String,
-//     required: false, 
-//     default: 'In Stock'
-//   }
-// })
-
-// app.post('/addproduct', async (req, res) => {
-//   let products = await Product.find({})
-//   let id;
-//   if (products.length > 0) {
-//     let last_product_array = products.slice(-1)
-//     let last_product = last_product_array[0]
-//     id = last_product.id + 1
-//   } else {
-//     id = 1
-//   }
-//   const product = new Product({
-//     name: req.body.name,
-//     description: req.body.description,
-//     image: req.body.image,
-//     category: req.body.category,
-//     sub_category: req.body.sub_category,
-//     sizes: req.body.sizes,
-//     new_price: req.body.new_price,
-//     old_price: req.body.old_price,
-//     available: req.body.available || 'In Stock'
-//   })
-
-  
-
-//   console.log(product)
-//   await product.save()
-//   console.log('saved')
-//   res.json({
-//     success: true,
-//     name: req.body.name
-//   })
-// })
-
-// // Creating API For deleting Products
-
-// app.post('/removeproduct', async (req, res) => {
-//   try {
-//     await Product.findOneAndDelete({ id: req.body.id });
-//     res.json({ success: true, name: req.body.name });
-//   } catch (error) {
-//     res.status(500).json({ success: false, errors: 'Error deleting product' });
-//   }
-// });
-
-// // Creating Api for getting all products 
-
-// app.get('/allproducts', async (req, res) => {
-//   let products = await Product.find({})
-//   console.log('All products Fetched')
-//   res.send(products)
-// })
-
-
-// // Schema creating for User model
-
-// const Users = mongoose.model('Users', {
-//   name: {
-//     type: String,
-//   },
-//   email: {
-//     type: String,
-//     unique: true
-//   },
-//   password: {
-//     type: String
-//   },
-//   cartData: {
-//     type: Object
-//   },
-//   date: {
-//     type: Date,
-//     default: Date.now
-//   }
-// })
-
-
-// // Creating Endpoint for registering the user
-
-// app.post('/signup', async (req, res) => {
-//   let check = await Users.findOne({ email: req.body.email })
-//   if (check) {
-//     return res.status(400).json({ success: false, errors: 'existing user found with same email address' })
-//   }
-
-//   let cart = {}
-//   for (let i = 0; i < 300; i++) {
-//     cart[i] = 0
-//   }
-
-//   const user = new Users({
-//     name: req.body.username,
-//     email: req.body.email,
-//     password: req.body.password,
-//     cartData: cart
-//   }) 
-
-//   await user.save()
-
-//   const data = {
-//     user: {
-//       id: user.id
-//     }
-//   }
-
-//   const token = jwt.sign(data, 'secret_ecom')
-//   res.json({ success: true, token })
-// })
-
-// // creating  endpoint for user login
-
-// app.post('/login', async (req, res) => {
-//   try {
-//     let user = await Users.findOne({ email: req.body.email });
-//     if (!user) {
-//       return res.status(401).json({ success: false, errors: 'Wrong Email ID' });
-//     }
-    
-//     const passCompare = await bcrypt.compare(req.body.password, user.password);
-//     if (!passCompare) {
-//       return res.status(401).json({ success: false, errors: 'Wrong Password' });
-//     }
-
-//     const data = { user: { id: user.id } };
-//     const token = jwt.sign(data, jwtSecret, { expiresIn: '1h' });
-//     res.json({ success: true, token });
-//   } catch (error) {
-//     res.status(500).json({ success: false, errors: 'Server error during login' });
-//   }
-// });
-
 
 // app.listen(port, (error) => {
-//   if (!error) {
-//     console.log(`Server running on port ${port}`)
-//   } else {
-//     console.log(`Error ${error}`)
-//   }
-// })
-
-
-// // --------------- Order ----------------
-
-
-// const Order = mongoose.model('Order', {
-//   userId: {
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: 'Users',
-//     required: true
-//   },
-//   products: [
-//     {
-//       productId: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: 'Product',
-//         required: true
-//       },
-//       quantity: {
-//         type: Number,
-//         required: true
-//       }
+//     if (!error) {
+//       console.log(`Server running on port ${port}`)
+//     } else {
+//       console.log(`Error ${error}`)
 //     }
-//   ],
-//   totalAmount: {
-//     type: Number,
-//     required: true
-//   },
-//   status: {
-//     type: String,
-//     default: 'Pending',
-//     required: true
-//   },
-//   orderDate: {
-//     type: Date,
-//     default: Date.now
-//   }
-// });
+//   })
 
 
-// app.post('/placeorder', async (req, res) => {
-//   const { userId, products, totalAmount } = req.body;
-//   console.log(req)
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import { Server } from 'socket.io';
+import http from 'http';
+import connectDB from './config/mongoDB.js';
+import connectCloudinary from './config/cloudinary.js';
+import userRouter from './routes/user.routes.js';
+import productRouter from './routes/product.routes.js';
+import cartRouter from './routes/cart.routes.js';
+import orderRouter from './routes/order.routes.js';
 
-//   const newOrder = new Order({
-//     userId: userId,
-//     products: products,
-//     totalAmount: totalAmount
-//   });
+dotenv.config(); // Ensure dotenv is initialized
 
-//   try {
-//     await newOrder.save();
-//     res.json({ success: true, message: 'Order placed successfully' });
-//   } catch (error) {
-//     res.status(500).json({ success: false, error: 'Failed to place order' });
-//   }
-// });
+const app = express();
+const port = process.env.PORT || 4000;
+
+// Create HTTP server to attach Socket.IO
+const server = http.createServer(app);
+
+// Initialize Socket.IO
+const io = new Server(server, {
+  cors: {
+    origin: '*', // Allow all origins (restrict in production for security)
+  },
+});
+
+// Connect to MongoDB
+(async () => {
+  try {
+    await connectDB();
+    console.log('Connected to MongoDB');
+    connectCloudinary();
+    console.log('Cloudinary configured');
+  } catch (error) {
+    console.error('Error initializing services:', error.message);
+    process.exit(1); // Exit on critical failure
+  }
+})();
+
+// Middleware
+app.use(express.json());
+app.use(cors());
+
+// Routes
+app.use('/api/user', userRouter);
+app.use('/api/product', productRouter);
+app.use('/api/cart', cartRouter);
+app.use('/api/order', orderRouter);
+
+// Root Endpoint
+app.get('/', (req, res) => {
+  res.send('Express App is Running');
+});
+
+// MongoDB Change Streams for Notifications
+import { MongoClient } from 'mongodb';
+
+(async () => {
+  try {
+    const mongoClient = new MongoClient('mongodb+srv://raohanzala70:rao896345@cluster0.ra2u8.mongodb.net/e-commerce', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    await mongoClient.connect();
+
+    const db = mongoClient.db('e-commerce'); // Replace 'e-commerce' with the actual database name
+const collection = db.collection('orders'); // Replace with your collection name
+
+    console.log('Listening for changes in MongoDB...');
+
+    const changeStream = collection.watch();
+
+    // Emit changes to connected clients via Socket.IO
+    changeStream.on('change', (change) => {
+      console.log('Change detected:', change);
+      io.emit('notification', change); // Send notification to all connected clients
+    });
+  } catch (error) {
+    console.error('Error setting up Change Streams:', error.message);
+  }
+})();
+
+// Handle Socket.IO Connections
+io.on('connection', (socket) => {
+  console.log('A client connected:', socket.id);
+
+  // Disconnect event
+  socket.on('disconnect', () => {
+    console.log('A client disconnected:', socket.id);
+  });
+});
+
+// Start the Server
+server.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
 
 
-// app.get('/allorders', async (req, res) => {
-//   try {
-//     const orders = await Order.find({}).populate('userId').populate('products.productId');
-//     res.json(orders);
-//   } catch (error) {
-//     res.status(500).json({ success: false, error: 'Failed to fetch orders' });
-//   }
-// });
+
+
+
+

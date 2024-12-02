@@ -14,7 +14,7 @@ const Orders = ({ token }) => {
 
   const {isLoading, setIsLoading, setPageTitle} = useContext(ShopContext)
 
-  console.log('Is Loading',isLoading)
+  console.log('Is Loading',orders)
   // Fetch all orders from the backend
   const fetchAllOrders = async () => {
     setIsLoading(true)
@@ -81,8 +81,8 @@ const Orders = ({ token }) => {
 
   // Fetch orders on component mount
   useEffect(() => {
-    setOrders([{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" }])
-    // fetchAllOrders();
+    // setOrders([{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" }])
+    fetchAllOrders();
     setPageTitle('Orders')
   }, []);
 
@@ -116,9 +116,9 @@ const Orders = ({ token }) => {
                   className=" hover:bg-gray-50 text-center cursor-pointer text-sm "
                 >
                   <td className="border py-3 px-4">{index + 1}</td>
-                  <td className="border py-3 px-4 text-left">Patek Phillipe</td>
-                  <td className="border py-3 px-4 text-left">{order.customerName || 'Kashif Ameen'}</td>
-                  <td className="border py-3 px-4 text-left truncate">{order.address || 'H-429, Lahore, Punjab'}</td>
+                  <td className="border py-3 px-4 text-left">{order.items[0].name}</td>
+                  <td className="border py-3 px-4 text-left">{order.address.firstName || 'Kashif Ameen'}</td>
+                  <td className="border py-3 px-4 text-left truncate">{order.address.city || 'H-429, Lahore, Punjab'}</td>
                   <td className="border py-3 px-4">{order.amount || '0'}</td>
                   <td
                     className={`py-3 border px-4 text-sm font-semibold ${
@@ -137,7 +137,7 @@ const Orders = ({ token }) => {
             ) : (
               <tr>
                 <td
-                  colSpan="5"
+                  colSpan="7"
                   className="py-4 text-center text-gray-500 font-semibold"
                 >
                   No orders found.
@@ -179,19 +179,19 @@ const Orders = ({ token }) => {
               </tr>
               <tr className="border">
                 <td className="py-2 px-4 font-semibold text-gray-600">Customer</td>
-                <td className="py-2 px-4">{selectedOrder.customerName}</td>
+                <td className="py-2 px-4">{selectedOrder.firstName}</td>
               </tr>
               <tr className="border">
                 <td className="py-2 px-4 border font-semibold text-gray-600">Amount</td>
-                <td className="py-2 px-4">{selectedOrder.amount}</td>
+                <td className="py-2 px-4">{selectedOrder.amount || 9000}</td>
               </tr>
               <tr className="border">
                 <td className="py-2 px-4 border font-semibold text-gray-600">Address</td>
-                <td className="py-2 px-4">{selectedOrder.address}</td>
+                <td className="py-2 px-4">{selectedOrder.address.city}</td>
               </tr>
               <tr className="border">
                 <td className="py-2 px-4 border font-semibold text-gray-600">Contact</td>
-                <td className="py-2 px-4">{selectedOrder.contact}</td>
+                <td className="py-2 px-4">{selectedOrder.phone}</td>
               </tr>
               <tr className="border-b">
                 <td className="py-2 px-4 border font-semibold text-gray-600">Status</td>
@@ -223,7 +223,7 @@ const Orders = ({ token }) => {
               </tr>
               <tr className="border">
                 <td className="py-2 px-4 font-semibold text-gray-600">Customer</td>
-                <td className="py-2 px-4">{selectedOrder.customerName}</td>
+                <td className="py-2 px-4">{selectedOrder.address.firstName}</td>
               </tr>
               <tr className="border">
                 <td className="py-2 px-4 border font-semibold text-gray-600">Amount</td>
@@ -231,11 +231,11 @@ const Orders = ({ token }) => {
               </tr>
               <tr className="border">
                 <td className="py-2 px-4 border font-semibold text-gray-600">Address</td>
-                <td className="py-2 px-4">{selectedOrder.address}</td>
+                <td className="py-2 px-4">{selectedOrder.address.city}</td>
               </tr>
               <tr className="border">
                 <td className="py-2 px-4 border font-semibold text-gray-600">Contact</td>
-                <td className="py-2 px-4">{selectedOrder.contact}</td>
+                <td className="py-2 px-4">{selectedOrder.address.phone}</td>
               </tr>
               <tr className="border-b">
                 <td className="py-2 px-4 border font-semibold text-gray-600">Status</td>

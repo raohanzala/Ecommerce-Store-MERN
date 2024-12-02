@@ -25,7 +25,6 @@ const LatestCollection = ({ }) => {
     <div className='my-10'>
       <div className='text-center pb-8 text-3xl '>
         <Title text1={'LATEST'} text2={'COLLECTIONS'} />
-        <p className='w-3/4 m-auto text-xs sm:text-sm md:text-base text-gray-600'>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vitae, voluptates!</p>
       </div>
 
 

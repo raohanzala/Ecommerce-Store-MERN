@@ -9,7 +9,7 @@ import adminPhoto from '../assets/admin-photo.jpeg'
 function SideBar() {
   return (
     <div
-      className="flex flex-col w-[90px] md:w-[285px] h-screen overflow-y-scroll transition-all duration-200 bg-[#232323] border-r"
+      className="flex flex-col w-[90px] scrollbar-hide md:w-[285px] h-screen overflow-y-scroll transition-all duration-200 bg-[#232323] border-r"
       style={{ boxShadow: "4px 0 8px rgba(0, 0, 0, 0.2)" }}
     >
       {/* Logo Section */}

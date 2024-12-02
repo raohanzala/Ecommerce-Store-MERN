@@ -96,10 +96,12 @@ import bg_logo_remove from  './bg-remove-logo.png'
 import feedback_1 from './Feedbacks/feedback_2.jpeg'
 import feedback_2 from './Feedbacks/feedback_3.jpeg'
 import feedback_3 from './Feedbacks/feedback_4.jpeg'
+import logo4 from './image.png'
 
 export const assets = {
     logo,
     logo2,
+    logo4,
     hero_img,
     hero_img2,
     cart_icon,

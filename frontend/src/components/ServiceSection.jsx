@@ -1,43 +1,62 @@
-import React from 'react'
-// import SeactionHeading from './SeactionHeading'
-import { FaShippingFast } from 'react-icons/fa'
-import { Ri24HoursLine } from 'react-icons/ri'
-import { MdPayments } from 'react-icons/md'
-import { AiOutlineSafetyCertificate } from 'react-icons/ai'
+import React from 'react';
+// Import Icons
+import { FaShippingFast } from 'react-icons/fa';
+import { Ri24HoursLine } from 'react-icons/ri';
+import { MdPayments } from 'react-icons/md';
+import { AiOutlineSafetyCertificate } from 'react-icons/ai';
+import Title from './Title';
 
 function ServiceSection() {
-  return (
-    <div className='py-10 '>
-        {/* <SeactionHeading heading='Our Services'/> */}
+  const services = [
+    {
+      icon: <FaShippingFast />,
+      title: "Fast Shipping",
+      description: "Get your products delivered in record time anywhere.",
+    },
+    {
+      icon: <Ri24HoursLine />,
+      title: "24/7 Support",
+      description: "We're here to help you anytime, day or night.",
+    },
+    {
+      icon: <MdPayments />,
+      title: "COD Payment",
+      description: "Enjoy the flexibility of cash-on-delivery payments.",
+    },
+    {
+      icon: <AiOutlineSafetyCertificate />,
+      title: "100% Safe",
+      description: "Shop confidently with our secure platform.",
+    },
+  ];
 
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7'>
-            <div className='flex flex-col gap-2 items-center'>
-                <div className='text-5xl text-[#cba035b3]'>
-                <FaShippingFast/>
-                </div>
-                <h4 className='text-2xl text-[#333]'>Fast Shipping</h4>
+  return (
+    <div className="py-12 px-6 bg-gray-50">
+      <div className="text-center mb-10 text-3xl">
+        <Title text1={'Our'} text2={'Services'}/>
+        <p className="text-gray-500 mt-2">Delivering excellence with every step.</p>
+      </div>
+
+      <div className="flex flex-wrap justify-center gap-12">
+        {services.map((service, index) => (
+          <div
+            key={index}
+            className="flex items-center gap-6 max-w-sm hover:bg-white hover:shadow-md p-4 rounded-lg transition-transform transform hover:scale-105"
+          >
+            <div className="text-5xl text-[#cba035b3] flex-shrink-0">
+              {service.icon}
             </div>
-            <div className='flex flex-col gap-2 items-center'>
-                <div className='text-5xl text-[#cba035b3]'>
-                <Ri24HoursLine  />
-                </div>
-                <h4 className='text-2xl text-[#333]'>24/7 Support</h4>
+            <div>
+              <h4 className="text-xl font-semibold text-gray-800">
+                {service.title}
+              </h4>
+              <p className="text-gray-500 text-sm mt-1">{service.description}</p>
             </div>
-            <div className='flex flex-col gap-2 items-center'>
-                <div className='text-5xl text-[#cba035b3]'>
-                <MdPayments />
-                </div>
-                <h4 className='text-2xl text-[#333]'>COD payment</h4>
-            </div>
-            <div className='flex flex-col gap-2 items-center'>
-                <div className='text-5xl text-[#cba035b3]'>
-                <AiOutlineSafetyCertificate/>
-                </div>
-                <h4 className='text-2xl text-[#333]'>100% Safe</h4>
-            </div>
-        </div>
+          </div>
+        ))}
+      </div>
     </div>
-  )
+  );
 }
 
-export default ServiceSection
+export default ServiceSection;

@@ -65,7 +65,7 @@ const SearchBar = ({ setShowSearch, name }) => {
                   />
                   <div>
                     <p className="font-semibold">{product.name}</p>
-                    <p className="text-sm text-gray-500">{currency}{product.new_price}</p>
+                    <p className="text-sm text-gray-500">{currency}{product.newPrice}</p>
                   </div>
                 </div>
               </div>

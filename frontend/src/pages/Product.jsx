@@ -1,119 +1,147 @@
-import { useContext, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { ShopContext } from '../context/ShopContext'
-import { assets } from '../assets/assets'
-import RelatedProducts from '../components/RelatedProducts'
-import LoadingSpinner from '../components/LoadingSpinner'
+import { useContext, useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { ShopContext } from '../context/ShopContext';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
+import RelatedProducts from '../components/RelatedProducts';
+import LoadingSpinner from '../components/LoadingSpinner';
+import { assets } from '../assets/assets';
 
 const Product = () => {
+  const { productId } = useParams();
+  const { products, currency, addToCart } = useContext(ShopContext);
+  const [image, setImage] = useState('');
+  const [size, setSize] = useState('');
 
-  const { productId } = useParams()
-  const { products, currency, addToCart } = useContext(ShopContext)
-  const [productData, setProductData] = useState(null)
-  const [image, setImage] = useState('')
-  const [size, setSize] = useState('')
-
-  const fetchProductData = async () => {
-    products.map((item) => {
-      if (item._id === productId) {
-        setProductData(item)
-        setImage(item.image[0])
-        return null
-      }
-    })
-  }
-
+  // Memoized product data
+  const productData = useMemo(
+    () => products.find((item) => item._id === productId),
+    [productId, products]
+  );
 
   useEffect(() => {
-    fetchProductData()
-  }, [productId, products])
+    if (productData) {
+      setImage(productData.image[0]);
+    }
+  }, [productData]);
 
   if (!productData) {
     return <LoadingSpinner />;
   }
 
-  return productData ? (
-    <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacit-100 max-w-[1280px] mx-auto'>
-      {/* Product Data */}
-      <div className='flex gap-12 sm:gap-12 flex-col sm:flex-row'>
+  return (
+    <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100 max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Product Details */}
+      <div className="flex flex-col sm:flex-row sm:gap-12 gap-8">
         {/* Product Images */}
-        <div className='flex-1 flex flex-col sm:flex-row gap-3'>
-          <div className='flex sm:flex-col overflow-x-auto sm:overflow-y-auto justify-between sm:justify-start sm:w-[18.7%] w-full'>
-            {
-              productData.image.map((item, index) => (
-                <img
-                  onClick={() => setImage(item)}
-                  src={item}
-                  key={index}
-                  className='w-[24%] sm:w-full sm:h-24 h-20 sm:mb-3 flex-shrink-0 cursor-pointer rounded-md border border-gray-200 hover:opacity-80 transition-opacity'
-                  alt={`Thumbnail ${index + 1}`}
-                />
-              ))
-            }
+        <div className="flex-1 flex flex-col sm:flex-row gap-4">
+          {/* Thumbnails */}
+          <div className="sm:flex sm:flex-col overflow-x-auto sm:overflow-y-auto sm:w-[20%] flex gap-4 p-2">
+            {productData.image.map((item, index) => (
+              <LazyLoadImage
+                key={index}
+                onClick={() => setImage(item)}
+                src={item}
+                className="w-24 sm:w-full sm:h-24 aspect-square cursor-pointer border border-gray-300 hover:opacity-80 transition-opacity rounded object-cover"
+                alt={`Thumbnail ${index + 1}`}
+                effect="blur"
+              />
+            ))}
           </div>
-          <div className='w-full sm:w-[80%] h-[620px]'>
-            <img className='w-full h-full object-cover rounded-md' src={image} alt="Product Image" />
+
+          {/* Main Image */}
+          <div className="w-full sm:w-[80%] flex items-center justify-center">
+            <div className="aspect-square w-full border border-gray-200 rounded overflow-hidden">
+              <LazyLoadImage
+                src={image}
+                className="w-full h-full object-contain"
+                alt="Selected Product"
+                effect="blur"
+              />
+            </div>
           </div>
         </div>
 
-        {/* ---------- Product Info ------------ */}
-        <div className='flex-1'>
-          <h1 className='font-medium text-2xl mt-2'>{productData.name}</h1>
-          <div className='flex items-center gap-1 mt-2'>
+        {/* Product Info */}
+        <div className="flex-1">
+          <h1 className="font-medium text-2xl">{productData.name}</h1>
+          <div className="flex items-center gap-1 mt-2">
             {Array.from({ length: 4 }).map((_, index) => (
-              <img key={index} src={assets.star_icon} className='w-3.5' alt="Star Icon" />
+              <img key={index} src={assets.star_icon} className="w-4" alt="Star Icon" />
             ))}
-            <img src={assets.star_dull_icon} className='w-3 5' alt="" />
-            <p className='pl-2'>(122)</p>
+            <img src={assets.star_dull_icon} className="w-4" alt="Dull Star Icon" />
+            <p className="pl-2 text-gray-600">(122)</p>
           </div>
-          <div className='flex gap-5'>
-
-          <p className='mt-5 text-xl text-gray-400 line-through'>{currency} {productData.newPrice}</p>
-          <p className='mt-5 text-lg font-medium text-[primary]'>{currency}{productData.oldPrice}</p>
+          <div className="flex gap-5 mt-5">
+            <p className="text-xl text-gray-400 line-through">
+              {currency} {productData.oldPrice}
+            </p>
+            <p className="text-xl font-semibold text-primary">
+              {currency} {productData.newPrice}
+            </p>
           </div>
-          <p className='mt-5 text-gray-500 md:w-4/5'>{productData.description}</p>
-
+          <p className="mt-5 text-gray-500 md:w-4/5">{productData.description}</p>
 
           {productData.sizes.length > 0 && (
-            <div className='flex flex-col gap-4 my-8'>
-              <p>Select Size</p>
-              <div className='flex gap-2'>
-                {productData?.sizes.map((item, index) => (
-                  <button onClick={() => setSize(item)} className={`border py-2 px-4 bg-gray-100 ${item === size ? 'border-orange-500' : ''}`} key={index}>{item}</button>
+            <div className="mt-8">
+              <p className="text-sm font-medium">Select Size</p>
+              <div className="flex gap-2 mt-2">
+                {productData.sizes.map((item, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSize(item)}
+                    className={`py-2 px-4 border bg-gray-100 transition-colors ${
+                      item === size ? 'border-orange-500 bg-orange-50' : ''
+                    }`}
+                  >
+                    {item}
+                  </button>
                 ))}
               </div>
-            </div>)}
+            </div>
+          )}
 
-          <button onClick={() => (addToCart( productData._id, size ))} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
-          <hr className='mt-8 sm:w-4/5 ' />
-          <div className='tedxt-sm text-gray-500 mt-5  flex flex-col gap-1'>
+          <button
+            onClick={() => addToCart(productData._id, size)}
+            className="bg-black text-white px-8 py-3 mt-6 text-sm hover:bg-gray-800 transition-colors"
+          >
+            ADD TO CART
+          </button>
+
+          <hr className="mt-8" />
+          <div className="text-sm text-gray-500 mt-5">
             <p>100% Original product.</p>
             <p>Cash on delivery is available on this product.</p>
             <p>Easy return and exchange policy within 7 days.</p>
           </div>
-
-
         </div>
-
       </div>
 
-      <div className='mt-20'>
+      {/* Product Description and Reviews */}
+      <div className="mt-20">
         <div className="flex">
-          <b className='border px-5 py-3 text-sm'>Description</b>
-          <p className='border px-5 py-3 text-sm'>Reviews (122)</p>
+          <b className="border px-5 py-3 text-sm">Description</b>
+          <p className="border px-5 py-3 text-sm">Reviews (122)</p>
         </div>
-
-        <div className='flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500'>
-          <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Rerum repellat minus temporibus est, eveniet molestiae optio sint vitae aperiam consectetur aut, excepturi inventore. Ipsa, rem?</p>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque adipisci veritatis nobis soluta nostrum cum magnam molestiae quibusdam deleniti odit.</p>
+        <div className="border px-6 py-6 text-sm text-gray-500 flex flex-col gap-4">
+          <p>
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Rerum repellat minus
+            temporibus est, eveniet molestiae optio sint vitae aperiam consectetur aut,
+            excepturi inventore. Ipsa, rem?
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque adipisci veritatis
+            nobis soluta nostrum cum magnam molestiae quibusdam deleniti odit.
+          </p>
         </div>
       </div>
 
-      {/* -------- Related Prodcucts ----------- */}
-
-      <RelatedProducts category={productData.category} sub_Category={productData.sub_category} />
+      {/* Related Products */}
+      <RelatedProducts category={productData.category} sub_Category={productData.subCategory} />
     </div>
-  ) : <div className='opacity-0'> </div>
-}
+  );
+};
 
-export default Product
+export default Product;
+
+

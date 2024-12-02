@@ -18,6 +18,27 @@ a.active hr{
   }
 }
 
+/* .swiper-slide {
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  opacity: 0.5; 
+}
+
+.swiper-slide-active {
+  transform: scale(1.1); 
+  opacity: 1; 
+}
+
+.swiper-slide-next,
+.swiper-slide-prev {
+  transform: scale(0.9); 
+}
+
+.swiper-slide-next + .swiper-slide,
+.swiper-slide-prev + .swiper-slide {
+  transform: scale(0.8); 
+} */
+
+
 /* Add this to your global CSS or Tailwind's custom styles */
 /* .swiper-button-next,
 .swiper-button-prev {

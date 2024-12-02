@@ -7,17 +7,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        'primary': '#e2c765',
-        'white': '#ffffff', // Default white (optional)
-        'charcoal-gray': '#2e2e2e',
-        'button-cta': '#c7a647',
-        'link-icons': '#6574e2',
+        primary: '#e2c765',
+        charcoalGray: '#2e2e2e',
+        buttonCta: '#c7a647',
+        linkIcons: '#6574e2',
       },
       fontFamily: {
-        sans: ["Roboto", 'sans-serif'], // Add your new font
+        sans: ["Roboto", "sans-serif"],
       },
-
     },
   },
-  plugins: [],
-}
+  plugins: [
+    require('tailwind-scrollbar-hide'), // Add this plugin for scrollbar-hide
+    // require('@tailwindcss/forms'), // Optional: Useful for styling forms
+  ],
+};

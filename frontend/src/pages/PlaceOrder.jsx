@@ -30,8 +30,6 @@ const PlaceOrder = () => {
 
   })
 
-  console.log(formData)
-
   const onChangeHandler = (e)=> {
     const name = e.target.name 
     const value = e.target.value
@@ -40,20 +38,24 @@ const PlaceOrder = () => {
   }
 
   const order = async (orderData)=> {
-    const response = await axios.post(backendUrl+ '/api/order/place', orderData, {headers: {token}})
-    if(response.data.success){
-      setCartItems({})
-      navigate('/orders')
-    }else{
-        toast.error(response.data.message)
+    try {
+      const response = await axios.post(backendUrl+ '/api/order/place', orderData, {headers: {token}})
+      console.log(response)
+      if(response.data.success){
+        setCartItems({})
+        navigate('/orders')
+      }else{
+          toast.error(response.data.message)
+        }
+        
+      } catch (error) {
+        console.log(error)
+        toast.error(error.data.message)
     }
   }
 
   const onSubmitHandler = async (e)=> {
     e.preventDefault()
-
-    console.log('Order working')
-
     try {
         let orderItems = []
 
@@ -76,6 +78,8 @@ const PlaceOrder = () => {
           amount : getCartAmount() + delivery_fee
         }
 
+        console.log(orderData, 'OrderData')
+
         switch (method){
           // API calls for COD Method
 
@@ -86,7 +90,6 @@ const PlaceOrder = () => {
             break;
         }
 
-        console.log(orderItems)
     } catch (error) {
       console.log(error)
         toast.error(error.message)
@@ -134,10 +137,10 @@ const PlaceOrder = () => {
           required
           type="text"
           onChange={onChangeHandler}
-          name='street'
-          value={formData.street}
+          name='city'
+          value={formData.city}
           className='border border-gray-300 rounded py-1.5 px-3.5 w-full'
-          placeholder='Street'
+          placeholder='City'
         />
         <div className='flex gap-3'>
           <input

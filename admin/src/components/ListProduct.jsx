@@ -147,13 +147,13 @@ const ListProduct = ({ token }) => {
   }
 
   useEffect(()=> {
-    setAllProducts([{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" }])
-    setPageTitle("List Products")
-    //   return () => setIsLoading(false);
+    // setAllProducts([{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" }])
+    // setPageTitle("List Products")
+      // return () => setIsLoading(false);
   },[setPageTitle])
 
   useEffect(() => {
-    // fetchList()
+    fetchList()
     setPageTitle("All Products")
     return () => setIsLoading(false);
   }, [setIsLoading])
@@ -187,7 +187,7 @@ const ListProduct = ({ token }) => {
                 >
                   <td className="border  py-2 px-4 border-r">{index + 1}</td>
                   <td className="border  py-2 px-4">
-                    {/* <img src={product.image[0]} className='w-12 h-12 m-auto' alt="" /> */}
+                    <img src={product.image[0]} className='w-12 h-12 m-auto' alt="" />
                   </td>
                   <td className="border  py-2 px-4 text-left">{product.name || 'Rolex Watch'}</td>
                   <td className="border py-2 px-4 ">{product.newPrice || '3,999'}</td>

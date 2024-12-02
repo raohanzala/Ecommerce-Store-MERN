@@ -5,6 +5,7 @@ import Title from '../components/Title';
 import ProductItem from '../components/ProductItem';
 import LoadingSpinner from '../components/LoadingSpinner';
 
+
 const Collection = () => {
   const { products = [], search, showSearch } = useContext(ShopContext);
   const [showFilter, setShowFilter] = useState(true);
@@ -41,7 +42,7 @@ const Collection = () => {
     }
 
     if (subCategory.length > 0) {
-      productsCopy = productsCopy.filter(item => subCategory.includes(item.sub_Category));
+      productsCopy = productsCopy.filter(item => subCategory.includes(item.subCategory));
     }
 
     sortProduct(productsCopy);
@@ -52,10 +53,10 @@ const Collection = () => {
     
     switch (sortType) {
       case 'low-high':
-        sortedProducts.sort((a, b) => a.new_price - b.new_price);
+        sortedProducts.sort((a, b) => a.newPrice - b.newPrice);
         break;
       case 'high-low':
-        sortedProducts.sort((a, b) => b.new_price - a.new_price);
+        sortedProducts.sort((a, b) => b.newPrice - a.newPrice);
         break;
       default:
         break;
@@ -78,6 +79,7 @@ const Collection = () => {
   if(!filterProducts){
     return <LoadingSpinner/>
   }
+  
 
   return (
     <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t max-w-[1280px] mx-auto'>
@@ -139,8 +141,8 @@ const Collection = () => {
                 key={item._id} 
                 name={item.name}
                 description={item.description}
-                new_price={item.newPrice}
-                old_price={item.oldPrice}
+                newPrice={item.newPrice}
+                oldPrice={item.oldPrice}
                 id={item._id}
                 image={item.image}
                 size={item.sizes}
@@ -150,7 +152,6 @@ const Collection = () => {
         </div>
 
         
-            <LoadingSpinner />
           
       </div>
     </div>
