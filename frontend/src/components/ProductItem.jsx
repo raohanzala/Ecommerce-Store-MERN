@@ -20,9 +20,12 @@ const ProductItem = memo(({ id, description, size, image, name, newPrice, oldPri
     [name]
   );
 
+  // Ensure that we have more than one image before enabling hover effect
+  const hasMultipleImages = image && image.length > 1;
+
   return (
     <Link to={`/product/${id}`}>
-      <div className="flex relative w-full h-auto flex-col text-gray-700 cursor-pointer bg-white overflow-hidden transform transition-all duration-500 hover:shadow-md rounded">
+      <div className="flex relative w-full h-auto flex-col text-gray-700 cursor-pointer bg-white overflow-hidden transform transition-all duration-500 hover:border-primary border rounded">
         {/* Offer Label */}
         {offer > 0 && (
           <div className="absolute top-2 left-2 bg-red-500 flex items-center justify-center shadow-md text-white w-10 h-10 text-xs font-bold z-10 rounded-full">
@@ -31,22 +34,25 @@ const ProductItem = memo(({ id, description, size, image, name, newPrice, oldPri
         )}
 
         {/* Image Section */}
-        <div className="relative aspect-w-1 aspect-h-1 w-full">
-          {/* Default Image */}
-          <LazyLoadImage
-            src={image[0]}
-            effect="blur"
-            className="w-full h-full object-cover transition-opacity rounded-md duration-500 ease-in-out hover:opacity-0"
-            alt={name}
-          />
-          {/* Hover Image */}
-          <LazyLoadImage
-            src={image[1]}
-            effect="blur"
-            className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out hover:opacity-100 hover:scale-105"
-            alt={name}
-          />
-        </div>
+        <div className="relative overflow-hidden aspect-w-1 aspect-h-1 w-full">
+  <LazyLoadImage
+    src={image[0]}
+    effect="blur"
+    className="w-full h-full object-cover transition-opacity duration-500 ease-in-out"
+    alt={name}
+  />
+
+  {/* Hover Image (1st index) - Only show if there are multiple images */}
+  {hasMultipleImages && (
+    <LazyLoadImage
+      src={image[1]}
+      effect="blur"
+      className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity transition-transform duration-500 ease-in-out hover:opacity-100 hover:scale-110"
+      alt={name}
+    />
+  )}
+</div>
+
 
         {/* Product Details */}
         <div className="text-center py-3 px-2">

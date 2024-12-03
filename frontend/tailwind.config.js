@@ -27,6 +27,9 @@ export default {
         'button-cta': '#c7a647',
         'link-icons': '#6574e2',
       },
+      fontFamily: {
+        sans: ["Roboto", "sans-serif"],
+      },
     },
   },
   plugins: [

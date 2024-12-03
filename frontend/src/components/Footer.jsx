@@ -1,45 +1,84 @@
-import React from 'react'
-import { assets } from '../assets/assets'
-import {Link} from 'react-router-dom'
+import React from 'react';
+import { assets } from '../assets/assets';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
-
-  const currentYear =  new Date().getFullYear()
+  const currentYear = new Date().getFullYear();
 
   return (
-
-      <div>
-    <div className='flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 text-sm p-5 py-10 bg-[#232323]'>
-
-        <div>
-          <img src={assets.logo4} className='mb-5 w-52 h-12' alt="" />
-          <p className='w-full md:w-2/3 text-[#969696]'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illum, officia dolores labore enim dicta eveniet!</p>
+    <div className="bg-[#232323] text-white">
+      {/* Main Footer Content */}
+      <div className="max-w-screen-xl mx-auto px-6 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        
+        {/* About Section */}
+        <div className="flex flex-col mb-8 sm:mb-0">
+          <img src={assets.logo4} className="mb-5 w-52 h-12" alt="Logo" />
+          <p className="text-[#969696] text-base leading-relaxed">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam convallis ligula ut erat vehicula, a tincidunt eros suscipit.
+          </p>
         </div>
-        <div>
-          <p className='text-xl font-medium mb-5 text-white'>COMPANY</p>
-          <ul className='flex flex-col gap-1 text-[#969696]'>
-            <li>Home</li>
-            <li>About us</li>
-            <li>Delivery</li>
-            <li>Privacy Policy</li>
+
+        {/* Quick Links Section */}
+        <div className="flex flex-col mb-8 sm:mb-0">
+          <p className="text-lg mb-4">Quick Links</p>
+          <ul className="space-y-2 text-sm text-[#969696]">
+            <li>
+              <Link to="/" className="hover:text-white transition-colors duration-300">Home</Link>
+            </li>
+            <li>
+              <Link to="/about" className="hover:text-white transition-colors duration-300">About Us</Link>
+            </li>
+            <li>
+              <Link to="/delivery" className="hover:text-white transition-colors duration-300">Delivery</Link>
+            </li>
+            <li>
+              <Link to="/privacy-policy" className="hover:text-white transition-colors duration-300">Privacy Policy</Link>
+            </li>
           </ul>
         </div>
 
-        <div>
-          <p className='text-xl font-medium mb-5 text-white'>GET IN TOUCH</p>
-          <ul className='flex flex-col gap-1 text-[#969696]'>
-            <li>+92-3278272361</li>
-            <li>realtimewrist@gmail.com</li>
+        {/* Contact Info Section */}
+        <div className="flex flex-col mb-8 sm:mb-0">
+          <p className="text-lg mb-4">Contact Info</p>
+          <ul className="space-y-2 text-sm text-[#969696]">
+            <li>Phone: +92-3278272361</li>
+            <li>Email: realtimewrist@gmail.com</li>
+          </ul>
+        </div>
+
+        {/* Social Media Section */}
+        <div className="flex flex-col mb-8 sm:mb-0">
+          <p className="text-lg mb-4">Follow Us</p>
+          <ul className="space-y-2 text-sm text-[#969696]">
+            <li>
+              <Link to="#" className="hover:text-white transition-colors duration-300">Facebook</Link>
+            </li>
+            <li>
+              <Link to="#" className="hover:text-white transition-colors duration-300">Instagram</Link>
+            </li>
+            <li>
+              <Link to="#" className="hover:text-white transition-colors duration-300">Twitter</Link>
+            </li>
+            <li>
+              <Link to="#" className="hover:text-white transition-colors duration-300">LinkedIn</Link>
+            </li>
           </ul>
         </div>
 
       </div>
-      <div className='bg-[#cba135]'>
-        {/* <hr /> */}
-        <p className='py-3 text-sm text-center text-white'>Copyright {currentYear}@ <Link to={'/'}> realtimewrist.pk </Link> - All Right Reserved.</p>
-      </div>  
-    </div>
-  )
-}
 
-export default Footer
+      {/* Footer Bottom Section */}
+      <div className="bg-[#cba135] py-3">
+        <p className="text-center text-sm">
+          Copyright {currentYear} @
+          <Link to="/" className="font-semibold hover:text-black transition-colors duration-200">
+            {' '}realtimewrist.pk{' '}
+          </Link>
+          - All Rights Reserved.
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default Footer;

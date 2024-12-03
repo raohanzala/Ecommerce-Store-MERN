@@ -32,15 +32,16 @@ const CategoryCollection = () => {
       {collections.map((collection) => (
         <div key={collection.id} className="overflow-hidden relative group h-96 max-h-96">
           <Link to={collection.link}>
-            <div className="relative w-full h-full transform group-hover:scale-110 duration-300">
+            <div className="relative w-full h-full transform group-hover:scale-110 duration-300 flex items-center justify-center">
               <LazyLoadImage
                 effect="blur"
                 src={collection.image}
-                className="w-full h-full object-cover object-center"
+                className="max-w-full max-h-full object-center"
                 alt={collection.title}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
             </div>
+
 
             <div className="absolute flex flex-col items-center justify-center bottom-4 left-[50%] top-[80%] -translate-x-[50%] -translate-y-[50%] text-white w-full">
               <div className='flex items-center mb-4'>

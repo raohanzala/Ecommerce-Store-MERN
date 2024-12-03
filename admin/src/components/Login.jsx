@@ -25,7 +25,7 @@ function Login({setToken}) {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-sm shadow-lg">
         <h2 className="text-2xl font-bold text-center text-gray-800">Admin Dashboard</h2>
         <p className="text-center text-gray-600">Sign in to your account</p>
 
@@ -47,14 +47,14 @@ function Login({setToken}) {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 mt-1 text-gray-900 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-300 focus:outline-none"
+              className="w-full px-4 py-2 mt-1 text-gray-900 border border-gray-300 rounded-sm  focus:outline-none"
               placeholder="Enter your password"
             />
           </div>
 
           <button
             onClick={handleLogin}
-            className="w-full py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
+            className="w-full py-2 text-white bg-[#232323] rounded-sm"
           >
             Login
           </button>

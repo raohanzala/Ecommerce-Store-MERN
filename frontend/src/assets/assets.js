@@ -74,7 +74,7 @@ import proking_3 from './proking_date_3.jpeg'
 
 
 import logo from './logo2.png'
-import logo2 from './logo3.png'
+import logo2 from './logo_3.png'
 import cart_icon from './cart_icon.png'
 import bin_icon from './bin_icon.png'
 import hero_img from './hero1.webp'

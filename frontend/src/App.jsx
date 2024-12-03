@@ -21,7 +21,7 @@ const NotFound = lazy(() => import('./components/NotFound')); // Assume you have
 
 const App = () => {
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const location = useLocation()
 
   useEffect(() => {

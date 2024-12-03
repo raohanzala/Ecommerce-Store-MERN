@@ -28,7 +28,8 @@ const Home = () => {
       {/* <OurPolicy/> */}
       <TestimonialSection />
       <ServiceSection />
-      <SignupEmail />
+      {/* <SignupEmail /> */}
+      <NewsLetterBox/>
     </div>
   )
 }

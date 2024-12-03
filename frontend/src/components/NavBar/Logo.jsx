@@ -24,8 +24,13 @@ const Logo = () => {
       </div>
 
 <Link to={'/'}>
-     <img src={assets.logo} className=' md:w-[260px] md:h-[48px] w-[180px] h-[38px]' alt="" />
+  <img
+    src={assets.logo2}
+    alt="Logo"
+    className="w-full max-w-[260px] h-auto md:max-w-[260px] md:h-[55px] sm:max-w-[180px] sm:h-[38px]"
+  />
 </Link>
+
 
       <div className='sm:flex hidden items-center '>
 

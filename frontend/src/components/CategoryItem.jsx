@@ -1,31 +1,39 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { assets } from '../assets/assets'
+import React from "react";
+import { IoShirtSharp } from "react-icons/io5";
+import { Link } from "react-router-dom";
+import { assets } from "../assets/assets";
 import { FaChevronRight } from "react-icons/fa6";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
-const CategoryItem = ({ category }) => {
+function CategoryItem({categoryName, categoryImg}) {
+
+
   return (
-    <div className='relative group'>
-      <Link to={`/product/${78}`} className='block overflow-hidden shadow-lg  hover:tracking-wider duration-500'>
-        <div className='overflow-hidden max-h-28'>
-          <img
-            src={assets.rolex_yatch_master_1}
-            alt={category}
-            className='w-full h-full object-bottom object-cover transition-transform duration-500 ease-in-out group-hover:scale-110'
+    <Link>
+      <div className="w-40 h-40 rounded-full overflow-hidden relative m-auto">
+        <div className="relative w-full h-full flex items-center justify-center hover:scale-110 duration-300">
+          <LazyLoadImage
+            effect="blur"
+            src={categoryImg}
+            className="w-full h-full object-cover"
+            alt=""
           />
+          {/* <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent hover:opacity-30 opacity-70 transition-opacity duration-300"></div> */}
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent      opacity-70 transition-opacity duration-300 group-hover:opacity-90"></div>
-        <div className="absolute flex items-center gap-1 bottom-4 left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] text-white">
+        <div className="bg-[rgba(0,0,0,0.7)] w-full ">
+        <div className="absolute  text-center flex items-center bottom-4 left-[50%] top-[75%] -translate-x-[50%] -translate-y-[50%] text-white">
           <div>
-            <h2 className='text-xl md:text-2xl lg:text-xl text-gray-100 font-semibold uppercase'>{category}</h2>
+            <h2 className='lg:text-base text-gray-50 font-medium uppercase'>{categoryName}</h2>
           </div>
-          <div className='text-lg text-gray-50 transform translate-x-10 opacity-0      transition-all             duration-500 group-hover:translate-x-0 group-hover:opacity-100'>
+          {/* <div className='text-sm text-gray-50 transform translate-x-0 opacity-1      transition-all             duration-500 group-hover:translate-x-0 group-hover:opacity-100'>
             <FaChevronRight />
-          </div>
+          </div> */}
         </div>
-      </Link>
-    </div>
-  )
+        </div>
+      </div>
+    </Link>
+  );
 }
 
-export default CategoryItem
+export default CategoryItem;

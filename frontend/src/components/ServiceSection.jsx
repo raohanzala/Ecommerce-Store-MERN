@@ -31,17 +31,16 @@ function ServiceSection() {
   ];
 
   return (
-    <div className="py-12 px-6 bg-gray-50">
-      <div className="text-center mb-10 text-3xl">
+    <div className="py-12 px-6 bg-[#FAFAFA]">
+      <div className="text-center uppercase mb-10 text-3xl">
         <Title text1={'Our'} text2={'Services'}/>
-        <p className="text-gray-500 mt-2">Delivering excellence with every step.</p>
       </div>
 
       <div className="flex flex-wrap justify-center gap-12">
         {services.map((service, index) => (
           <div
             key={index}
-            className="flex items-center gap-6 max-w-sm hover:bg-white hover:shadow-md p-4 rounded-lg transition-transform transform hover:scale-105"
+            className="flex items-center gap-6 max-w-sm bg-white shadow-sm p-4 rounded-lg transition-transform transform "
           >
             <div className="text-5xl text-[#cba035b3] flex-shrink-0">
               {service.icon}

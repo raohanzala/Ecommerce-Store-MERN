@@ -37,7 +37,7 @@ const LatestCollection = ({ }) => {
             prevEl: ".custom-prev",
             nextEl: ".custom-next",
           }}
-          autoplay={{ delay: 1500 }}
+          // autoplay={{ delay: 1500 }}
           >
           
           {latestProducts.map((item, index) => (
