@@ -89,4 +89,14 @@ const adminLogin = (req, res) => {
   }
 }
 
-export { loginUser, registerUser, adminLogin }
+const allUser = async (req, res) => {
+  try {
+    const users = await userModel.find({}); 
+    res.json({ success: true, users });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export { loginUser, registerUser, adminLogin, allUser }

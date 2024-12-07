@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { assets } from '../../../frontend/src/assets/assets'
 import { backendUrl } from '../App'
@@ -29,9 +29,8 @@ const ListProduct = ({ token }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5; // Number of products per page
-  const indexOfLastProduct = currentPage * itemsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
-  const currentProducts = allproducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const [totalPages, setTotalPages] = useState(1);
+
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isModalOpen, setModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
@@ -41,33 +40,36 @@ const ListProduct = ({ token }) => {
 
 
 
-  const handleDropdownToggle = (productId) => {
+  const handleDropdownToggle = useCallback((productId) => {
     setActiveDropdown((prev) => (prev === productId ? null : productId));
-  };
+  }, []);
 
   const { isLoading, setIsLoading, setPageTitle } = useContext(ShopContext)
   console.log(allproducts)
 
-  const fetchList = async () => {
-    setIsLoading(true)
+  const fetchList = async (page = 1, limit = 5) => {
+    setIsLoading(true);
     try {
-      const response = await axios.get(backendUrl + '/api/product/list', {
-        headers: { token }
-      })
-      console.log(response)
+      const response = await axios.get(`${backendUrl}/api/product/paginated-list?page=${page}&limit=${limit}`, {
+        headers: { token },
+      });
+  
+      console.log(response, 'fetchpaginaitn')
       if (response.data.success) {
-        setAllProducts(response.data.products)
+        setAllProducts(response.data.products); 
+        setCurrentPage(page); 
+  setTotalPages(response.data.totalPages);
       } else {
-        toast.error(response.data.message)
+        toast.error(response.data.message);
       }
     } catch (error) {
-      console.log(error)
-      toast.error(error.message)
+      console.error(error);
+      toast.error(error.message);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-
-  }
+  };
+  
 
   console.log(selectedItem)
 
@@ -126,31 +128,31 @@ const ListProduct = ({ token }) => {
   };
 
   const handlePageChange = (page) => {
-    setCurrentPage(page);
+    fetchList(page, itemsPerPage)
   };
 
-  function formatTimestamp(timestamp) {
-    const date = new Date(timestamp); // Convert the timestamp to a Date object
+  const wrapperRef = useRef(null)
 
-    const options = {
-      weekday: 'long', // Full weekday name (e.g., Monday)
-      year: 'numeric', // Full year (e.g., 2024)
-      month: 'long', // Full month name (e.g., November)
-      day: 'numeric', // Day of the month (e.g., 17)
-      hour: '2-digit', // 2-digit hour
-      minute: '2-digit', // 2-digit minute
-      second: '2-digit', // 2-digit second
-      hour12: true, // Display in 12-hour format with AM/PM
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setActiveDropdown(null) // Close dropdown when clicked outside
+      }
     };
 
-    return date.toLocaleString('en-US', options);
-  }
+    document.addEventListener('mousedown', handleClickOutside); // Add event listener
 
-  useEffect(()=> {
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside); // Clean up event listener
+    };
+  }, []);
+
+
+  useEffect(() => {
     // setAllProducts([{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" }])
     // setPageTitle("List Products")
-      // return () => setIsLoading(false);
-  },[setPageTitle])
+    // return () => setIsLoading(false);
+  }, [setPageTitle])
 
   useEffect(() => {
     fetchList()
@@ -163,7 +165,6 @@ const ListProduct = ({ token }) => {
     <div>
 
       <div className='flex gap-5 mb-6'>
-
         <SearchSortBar placeholder="Search product" options={['recent', 'date']} />
         <button onClick={() => setModalOpen(true)} className='px-4 border-0 bg-primary text-nowrap rounded-md text-white flex items-center justify-center gap-2 text-sm font-medium'><FaPlus />
           Add Product</button>
@@ -173,43 +174,56 @@ const ListProduct = ({ token }) => {
           <thead>
             <tr className="bg-[#f2f2f2af] text-[#5c5c5c] text-sm">
               {columns.map((col) => (
-                <th key={col} className={`py-3 px-4 border ${col === "S.No" && 'max-w-7'}`}>{col}</th>
+                <th key={col} className={`py-3 px-4 border ${col === "S.No" && 'max-w-7'} `}>{col}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {currentProducts.length > 0 ? (
-              currentProducts.map((product, index) => (
-                <tr
-                  key={product._id}
-                  className="border-b text-center text-sm"
+            {allproducts?.length > 0 ? (
+              allproducts.map((product, index) => (
+                <tr key={product._id} className="border-b text-center text-sm">
+                  <td className="border py-2 px-4 border-r">{index + 1}</td>
 
-                >
-                  <td className="border  py-2 px-4 border-r">{index + 1}</td>
-                  <td className="border  py-2 px-4">
-                    <img src={product.image[0]} className='w-12 h-12 m-auto' alt="" />
+                  {/* Image Column with Specific Width */}
+                  <td className="py-2 px-4">
+
+                    <img
+                      key={product.image[0]}
+                      src={product.image[0]}
+                      alt={`Product ${product.name}`}
+                      className="w-12 h-12 shrink-0 object-cover mx-auto rounded-sm transition-transform transform hover:scale-105 cursor-pointer"
+                    />
                   </td>
-                  <td className="border  py-2 px-4 text-left">{product.name || 'Rolex Watch'}</td>
-                  <td className="border py-2 px-4 ">{product.newPrice || '3,999'}</td>
-                  <td className="border py-2 px-4  text-left">{product.availibility ? 'In Stock' : 'Out of stock'}</td>
+
+                  <td className="border py-2 px-4 text-left">{product.name || 'Rolex Watch'}</td>
+                  <td className="border py-2 px-4">{product.newPrice || '3,999'}</td>
+                  <td className="border py-2 px-4 text-left">{product.availibility ? 'In Stock' : 'Out of stock'}</td>
                   <td className="border py-2 px-4 capitalize">{product.category || "Men's"}</td>
+
+                  {/* Action Column */}
                   <td className="border py-2 px-4 text-xl relative cursor-pointer">
                     <button
                       aria-label={`Open actions for product ${product.name}`}
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDropdownToggle(product._id);
-                        setSelectedItem(product)
+                        setSelectedItem(product);
                       }}
                     >
                       <IoMdMore className="m-auto" />
                     </button>
+
+                    {/* Dropdown */}
                     {activeDropdown === product._id && (
                       <div
                         className="absolute text-sm right-4 top-10 bg-white shadow-lg z-20 border rounded-sm p-1 w-36"
-                        onClick={(e) => e.stopPropagation()} // Prevent modal click closing
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveDropdown(null);
+                        }}
+                        ref={wrapperRef} // Prevent modal click closing
                       >
-                        <ul className="text-left ">
+                        <ul className="text-left">
                           <li className="px-2 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
                             <BiPencil className='text-lg' />
                             Edit
@@ -227,12 +241,13 @@ const ListProduct = ({ token }) => {
                     )}
                   </td>
                 </tr>
+
               ))
             ) : (
               <tr>
                 <td
                   colSpan="7"
-                  className="py-4 text-center text-gray-500 font-semibold"
+                  className="py-4 text-center text-gray-500"
                 >
                   No Products found.
                 </td>
@@ -241,10 +256,10 @@ const ListProduct = ({ token }) => {
           </tbody>
         </table>
         <Pagination
-          currentPage={currentPage}
-          totalPages={Math.ceil(allproducts.length / itemsPerPage)}
-          onPageChange={handlePageChange}
-        />
+  currentPage={currentPage}
+  totalPages={totalPages}
+  onPageChange={handlePageChange}
+/>
       </div>
 
       <ConfirmationModal show={isModalVisible} title={'Delete Product'} message={'Are you sure you want to delete this product?'} confirmText={'Delete'} cancelText={'Cancel'} onConfirm={handleConfirmDelete}

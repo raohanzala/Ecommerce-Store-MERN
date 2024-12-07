@@ -9,14 +9,20 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
   const renderPageNumbers = () => {
     const pages = [];
-    for (let i = 1; i <= totalPages; i++) {
+
+    // Define visible page numbers dynamically
+    const visibleRange = 3; // Number of pages to display before/after the current page
+    const startPage = Math.max(1, currentPage - visibleRange);
+    const endPage = Math.min(totalPages, currentPage + visibleRange);
+
+    for (let i = startPage; i <= endPage; i++) {
       pages.push(
         <button
           key={i}
-          className={`px-3 py-1 mx-1 text-xs rounded ${
+          className={`mx-1 px-4 py-2 rounded-full text-sm font-semibold transition-all shadow-sm ${
             i === currentPage
-              // ? 'bg-green-500 text-white'
-              // : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              ? 'bg-indigo-600 text-white scale-110'
+              : 'bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white'
           }`}
           onClick={() => handleClick(i)}
         >
@@ -24,25 +30,39 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         </button>
       );
     }
+
     return pages;
   };
 
   return (
-    <div className="flex justify-center items-center mt-6">
+    <div className="flex justify-center items-center gap-2 mt-6">
+      {/* Previous Button */}
       <button
-        className="px-3 py-1 mx-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+        className={`px-4 py-2 rounded-full text-sm font-semibold transition-all shadow-sm ${
+          currentPage === 1
+            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            : 'bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white'
+        }`}
         disabled={currentPage === 1}
         onClick={() => handleClick(currentPage - 1)}
       >
-        Prev
+        &larr; Prev
       </button>
-      {renderPageNumbers()}
+
+      {/* Page Numbers */}
+      {renderPageNumbers() }
+
+      {/* Next Button */}
       <button
-        className="px-3 py-1 mx-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+        className={`px-4 py-2 rounded-full text-sm font-semibold transition-all shadow-sm ${
+          currentPage === totalPages
+            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            : 'bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white'
+        }`}
         disabled={currentPage === totalPages}
         onClick={() => handleClick(currentPage + 1)}
       >
-        Next
+        Next &rarr;
       </button>
     </div>
   );

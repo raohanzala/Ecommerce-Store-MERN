@@ -11,7 +11,7 @@ function CategoryItem({categoryName, categoryImg}) {
 
   return (
     <Link>
-      <div className="w-40 h-40 rounded-full overflow-hidden relative m-auto">
+      <div className="w-36 h-36 rounded-full overflow-hidden relative m-auto">
         <div className="relative w-full h-full flex items-center justify-center hover:scale-110 duration-300">
           <LazyLoadImage
             effect="blur"
@@ -19,14 +19,14 @@ function CategoryItem({categoryName, categoryImg}) {
             className="w-full h-full object-cover"
             alt=""
           />
-          {/* <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent hover:opacity-30 opacity-70 transition-opacity duration-300"></div> */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent hover:opacity-30 opacity-70 transition-opacity duration-300"></div>
         </div>
         <div className="bg-[rgba(0,0,0,0.7)] w-full ">
         <div className="absolute  text-center flex items-center bottom-4 left-[50%] top-[75%] -translate-x-[50%] -translate-y-[50%] text-white">
           <div>
-            <h2 className='lg:text-base text-gray-50 font-medium uppercase'>{categoryName}</h2>
+            <h2 className='lg:text-sm text-gray-50 font-semibold uppercase'>{categoryName}</h2>
           </div>
-          {/* <div className='text-sm text-gray-50 transform translate-x-0 opacity-1      transition-all             duration-500 group-hover:translate-x-0 group-hover:opacity-100'>
+          {/* <div className='text-sm text-gray-50 transform translate-x-0 opacity-1 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100'>
             <FaChevronRight />
           </div> */}
         </div>

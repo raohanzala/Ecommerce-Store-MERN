@@ -57,9 +57,8 @@ function Header({ setToken }) {
           </div>
         </div>
 
-        <div className='text-3xl font-extralight text-[#919191] cursor-pointer'>
-        <IoLogOutOutline />
-
+        <div className='text-3xl font-extralight text-[#919191] cursor-pointer' >
+        <IoLogOutOutline onClick={()=>{ localStorage.removeItem('token'); window.location.replace('/')}} />
         </div>
 
       </div>

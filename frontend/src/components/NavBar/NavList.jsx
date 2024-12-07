@@ -5,7 +5,7 @@ const NavList = () => {
   
 
   return (
-    <ul className='hidden md:flex gap-5  text-gray-50 text-xs z-[999]' >
+    <ul className='hidden md:flex gap-5  text-gray-50 text-xs font-semibold z-[999]' >
       <NavLink to='/' className='flex flex-col items-center gap-1'>
         <p>HOME</p>
         {/* <hr className='w-full border-none h-[1.5px] bg-goldPrimary hidden' /> */}

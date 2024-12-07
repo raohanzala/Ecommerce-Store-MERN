@@ -52,6 +52,8 @@ const ShopContextProvider = ({ children }) => {
 
 
   const addToCart = async (itemId, size) => {
+
+    toast.success('Added to cart')
     let cartData = structuredClone(cartItems);
   
     if (cartData[itemId]) {

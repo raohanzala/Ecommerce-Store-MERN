@@ -43,7 +43,7 @@ const Cart = () => {
       </div>
 
       <div>
-        {
+        {cartData.length > 0 ?
           cartData.map((item, index) => {
             const productData = products.find((product) => product._id === item._id)
             console.log(productData)
@@ -55,7 +55,7 @@ const Cart = () => {
                     <p className='text-xs sm:text-lg font-medium'>{productData.name}</p>
                     <div className='flex items-center gap-5 mt-2'>
                       <p>{currency}{productData.newPrice}</p>
-                      {productData.sizes ? <p className='px-2 sm:px-3 sm:py-1 border bg-slate-50'>{item.size}</p> : null}
+                      {productData.sizes.length > 0 && <p className='px-2 sm:px-3 sm:py-1 border bg-slate-50'>{item.size}</p>}
                     </div>
                   </div>
                 </div>
@@ -63,7 +63,9 @@ const Cart = () => {
                 <img onClick={() => updateQuantity(item._id, item.size, 0)} className='w-4 mr-4 sm:w-5 cursor-pointer' src={assets.bin_icon} alt="" />
               </div>
             )
-          })
+          }) : <div className='py-9 flex items-center justify-center'>
+            <p className='text-2xl text-[#d2d2d2]'>Your cart is empty</p>
+          </div>
         }
       </div>
 

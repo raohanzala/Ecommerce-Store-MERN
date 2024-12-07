@@ -7,15 +7,14 @@ import { ShopContext } from '../contexts/ShopContext';
 import Loader from '../components/Loader';
 
 const Orders = ({ token }) => {
-  const [orders, setOrders] = useState([]); // State to hold orders
-  const [selectedOrder, setSelectedOrder] = useState(null); // Selected order for the drawer
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Drawer visibility
-  const [isAnimating, setIsAnimating] = useState(false); // Animation for the drawer
+  const [orders, setOrders] = useState([]); 
+  const [selectedOrder, setSelectedOrder] = useState(null); 
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false); 
+  const [isAnimating, setIsAnimating] = useState(false); 
 
-  const {isLoading, setIsLoading, setPageTitle} = useContext(ShopContext)
+  const {isLoading, setIsLoading, setPageTitle, formatTimestamp, timestampToShortDate} = useContext(ShopContext)
 
   console.log('Is Loading',orders)
-  // Fetch all orders from the backend
   const fetchAllOrders = async () => {
     setIsLoading(true)
     if (!token) return;
@@ -116,7 +115,7 @@ const Orders = ({ token }) => {
                   className=" hover:bg-gray-50 text-center cursor-pointer text-sm "
                 >
                   <td className="border py-3 px-4">{index + 1}</td>
-                  <td className="border py-3 px-4 text-left">{order.items[0].name}</td>
+                  <td className="border py-3 px-4 text-left">{order.items[0]?.name || ''}</td>
                   <td className="border py-3 px-4 text-left">{order.address.firstName || 'Kashif Ameen'}</td>
                   <td className="border py-3 px-4 text-left truncate">{order.address.city || 'H-429, Lahore, Punjab'}</td>
                   <td className="border py-3 px-4">{order.amount || '0'}</td>
@@ -131,7 +130,7 @@ const Orders = ({ token }) => {
                   >
                     {order.status}
                   </td>
-                  <td className="py-3 px-4 text-sm border">{order.date || 'N/A'}</td>
+                  <td className="py-3 px-4 text-sm border">{timestampToShortDate(order.date) || 'N/A'}</td>
                 </tr>
               ))
             ) : (
@@ -170,7 +169,7 @@ const Orders = ({ token }) => {
       <h2 className="text-xl font-semibold mb-4">Order Details</h2>
       {selectedOrder ? (
         <>
-          <p className="mb-5 text-gray-600">Date: {selectedOrder.date}</p>
+          <p className="mb-5 text-gray-600">Date: {formatTimestamp(selectedOrder.date)}</p>
           <table className="w-full border border-gray-300 text-left text-sm mb-3">
             <tbody>
               <tr className="border">

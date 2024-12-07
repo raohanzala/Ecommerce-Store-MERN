@@ -27,18 +27,18 @@ const About = () => {
 
       <div className='flex flex-col md:flex-row text-sm mb-20'>
         <div className='border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5'>
-          <b>Quality Assurance:</b>
+          <h2 className='text-base font-semibold'>Quality Assurance:</h2>
           <p className='text-gray-600'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, fuga.</p>
         </div>
 
 
 
-        <div className='border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5'>
-          <b>Convenience:</b>
+        <div className='border border-l-0 border-r-0 px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5'>
+          <h2 className='text-base font-semibold'>Convenience:</h2>
           <p className='text-gray-600'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, fuga.</p>
         </div>
         <div className='border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5'>
-          <b >Exceptional Customer Service:</b>
+          <h2 className='text-base font-semibold'>Exceptional Customer Service:</h2>
           <p className='text-gray-600'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, fuga.</p>
         </div>
       </div>

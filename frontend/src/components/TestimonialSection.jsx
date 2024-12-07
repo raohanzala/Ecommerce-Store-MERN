@@ -24,7 +24,7 @@ const TestimonialSection = () => {
           coverflowEffect={{
             rotate: 0, // No rotation
             stretch: 0, // No stretching
-            depth: 100, // Distance perspective
+            depth: 50, // Distance perspective
             modifier: 2, // Scaling intensity
             slideShadows: false, // Remove shadows
           }}

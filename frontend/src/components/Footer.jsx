@@ -14,7 +14,7 @@ const Footer = () => {
         <div className="flex flex-col mb-8 sm:mb-0">
           <img src={assets.logo4} className="mb-5 w-52 h-12" alt="Logo" />
           <p className="text-[#969696] text-base leading-relaxed">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam convallis ligula ut erat vehicula, a tincidunt eros suscipit.
+          Affordable watches, from budget-friendly to luxury – find your perfect timepiece at Realtime Wrist!
           </p>
         </div>
 

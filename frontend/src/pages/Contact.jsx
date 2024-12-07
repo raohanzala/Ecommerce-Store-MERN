@@ -19,10 +19,10 @@ const Contact = () => {
           <p className='text-gray-500'>Tel: +92-3278272361 <br /> realtimewrist@gmail.com</p>
           <p className='font-semibold text-xl text-gray-600'>Careers at Realtimewrist</p>
           <p className='text-gray-500'>Learn more about our teams and job openings.</p>
-          <button className='border border-black px-8 py-4 text-sm hover:bg-[#cba035a6] hover:border-opacity-0 hover:text-white transition-all duration-500'>Explore Jobs</button>
+          <button className='border border-black px-8 py-4 text-sm cursor-not-allowed hover:bg-[#cba035a6] hover:border-opacity-0 hover:text-white transition-all duration-500'>Explore Jobs</button>
         </div>
       </div>
-      <SignupEmail />
+      <NewsLetterBox />
     </div>
   )
 }

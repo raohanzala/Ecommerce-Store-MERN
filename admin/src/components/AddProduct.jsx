@@ -110,7 +110,7 @@ const AddProduct = ({ token }) => {
         <div>
           <label className="block mb-6">
             <span className="text-lg">Product Title</span>
-            <input type="text" className="w-full mt-2 p-2 border rounded focus:outline-none focus:ring focus:ring-green-200" placeholder="Enter product name" value={name} onChange={(e) => setName(e.target.value)} />
+            <input type="text" className="w-full mt-2 p-2 border rounded focus:outline-none focus:ring focus:ring-primary" placeholder="Enter product name" value={name} onChange={(e) => setName(e.target.value)} />
           </label>
 
           <label className="block mb-6">

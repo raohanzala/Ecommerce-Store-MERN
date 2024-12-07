@@ -5,9 +5,6 @@ import { useState } from "react";
 import { ShopContext } from "../contexts/ShopContext";
 import Loader from "../components/Loader";
 
-
-
-
 function AppLayout({ children }) {
   const {isLoading} = useContext(ShopContext)
 

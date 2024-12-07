@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { backendUrl } from '../App'
 import toast from 'react-hot-toast';
+import Logo from './Logo';
 
 function Login({setToken}) {
 
@@ -25,18 +26,19 @@ function Login({setToken}) {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-sm shadow-lg">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-lg">
+        {/* <Logo/> */}
         <h2 className="text-2xl font-bold text-center text-gray-800">Admin Dashboard</h2>
         <p className="text-center text-gray-600">Sign in to your account</p>
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Username</label>
+            <label className="block text-sm font-medium text-gray-700">Admin Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 mt-1 text-gray-900 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-300 focus:outline-none"
+              className="w-full px-4 py-2 mt-1 text-gray-900 border border-gray-300 rounded-sm focus:ring-primary focus:ring-2 focus:outline-none"
               placeholder="Enter your email"
             />
           </div>

@@ -28,7 +28,7 @@ export default {
         'link-icons': '#6574e2',
       },
       fontFamily: {
-        sans: ["Roboto", "sans-serif"],
+        sans: ["Lato", "serif"],
       },
     },
   },

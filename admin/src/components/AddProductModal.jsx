@@ -104,7 +104,7 @@ const AddProductModal = ({ token, isOpen, onClose, fetchList }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl p-8 relative">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl max-h-[90vh] p-8 relative overflow-y-scroll">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -123,7 +123,7 @@ const AddProductModal = ({ token, isOpen, onClose, fetchList }) => {
                 <span className="text-base">Product Title</span>
                 <input
                   type="text"
-                  className="w-full mt-1 text-sm p-2 border rounded focus:outline-none focus:ring"
+                  className="w-full mt-1 text-sm p-2 border rounded focus:outline-none focus:ring-primary focus:ring-1"
                   placeholder="Enter product name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -133,7 +133,7 @@ const AddProductModal = ({ token, isOpen, onClose, fetchList }) => {
               <label className="block mb-4">
                 <span className="text-base">Product Description</span>
                 <textarea
-                  className="w-full mt-1 text-sm p-2 border rounded focus:outline-none focus:ring"
+                  className="w-full mt-1 text-sm p-2 border rounded focus:outline-none focus:ring-primary focus:ring-1"
                   placeholder="Enter product description"
                   value={'Quartz Machine, Stainless Steel Chain, Date Working, Master Lock, Best Quality.'}
                   onChange={(e) => setDescription(e.target.value)}
@@ -145,7 +145,7 @@ const AddProductModal = ({ token, isOpen, onClose, fetchList }) => {
                   <span className="text-base">Price</span>
                   <input
                     type="number"
-                    className="w-full mt-1 text-sm p-2 border rounded focus:outline-none focus:ring"
+                    className="w-full mt-1 text-sm p-2 border rounded focus:outline-none focus:ring-primary focus:ring-1"
                     placeholder="Regular price"
                     min="0"
                     value={oldPrice}
@@ -156,7 +156,7 @@ const AddProductModal = ({ token, isOpen, onClose, fetchList }) => {
                   <span className="text-base">Offer Price</span>
                   <input
                     type="number"
-                    className="w-full mt-1 text-sm p-2 border rounded focus:outline-none focus:ring"
+                    className="w-full mt-1 text-sm p-2 border rounded focus:outline-none focus:ring-primary focus:ring-1"
                     placeholder="Discounted price"
                     value={newPrice}
                     onChange={(e) => setNewPrice(e.target.value)}
@@ -167,7 +167,7 @@ const AddProductModal = ({ token, isOpen, onClose, fetchList }) => {
               <label className="block mt-4">
                 <span className="text-base">Availability</span>
                 <select
-                  className="w-full mt-1 text-sm p-2 border rounded focus:outline-none focus:ring"
+                  className="w-full mt-1 text-sm p-2 border rounded focus:outline-none focus:ring-primary focus:ring-1"
                   value={availability}
                   onChange={(e) => setAvailability(e.target.value)}
                 >
@@ -225,7 +225,7 @@ const AddProductModal = ({ token, isOpen, onClose, fetchList }) => {
               <label className="block mb-4">
                 <span className="text-base">Category</span>
                 <select
-                  className="w-full mt-1 text-sm p-2 border rounded focus:outline-none focus:ring"
+                  className="w-full mt-1 text-sm p-2 border rounded focus:outline-none focus:ring-primary focus:ring-1"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
                 >
@@ -237,7 +237,7 @@ const AddProductModal = ({ token, isOpen, onClose, fetchList }) => {
               <label className="block mb-4">
                 <span className="text-base">Sub Category</span>
                 <select
-                  className="w-full mt-1 text-sm p-2 border rounded focus:outline-none focus:ring"
+                  className="w-full mt-1 text-sm p-2 border rounded focus:outline-none focus:ring-primary focus:ring-1"
                   value={subCategory}
                   onChange={(e) => setSubcategory(e.target.value)}
                 >
