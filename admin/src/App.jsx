@@ -12,35 +12,41 @@ import Orders from './pages/Orders';
 import AddProduct from './components/AddProduct';
 import Notifications from './pages/Notifications';
 import Loader from './components/Loader';
+import { ShopContext } from './contexts/ShopContext';
+import LoadingLogo from './components/LoadingLogo';
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL
 export const currency = 'Rs.'
 
 function App() {
 
-  const [token, setToken] = useState(localStorage.getItem('token')? localStorage.getItem('token') : '')
+const {token, isLoading : contextLoading} = useContext(ShopContext)
 
-  useEffect(()=> {
-    localStorage.setItem('token', token)
-  }, [token])
+// const [token, setToken] = useState(localStorage.getItem('token')?localStorage.getItem('token'):"")
+
+// useEffect(()=> {
+//   localStorage.setItem('token', token)
+// },[token])
 
 
-  console.log(token);
+// if (contextLoading) {
+//   return <Loader />;  // Or a simple loading spinner while the token is being fetched
+// }
   return (
     <div className='h-screen bg-[#f6f9ff]'>
       {token ? 
       <AppLayout>
       <Suspense fallback={<Loader />}>
         <Routes>
-          <Route path="/" element={<Dashboard token={token} />} />
-          <Route path="/add" element={< AddProduct token={token}/>} />
-          <Route path="/list" element={< ListProduct token={token}/>} />
-          <Route path="/orders" element={< Orders token={token}/>} />
-          <Route path="/notifications" element={< Notifications token={token}/>} />
+          <Route path="/" element={<Dashboard  />} />
+          <Route path="/add" element={< AddProduct />} />
+          <Route path="/list" element={< ListProduct />} />
+          <Route path="/orders" element={< Orders />} />
+          <Route path="/notifications" element={< Notifications />} />
           <Route path="/profile" element={< Profile/>} />
         </Routes>
       </Suspense>
-    </AppLayout> : <Login setToken={setToken}/> }
+    </AppLayout> : <Login /> }
 
     <Toaster
         position='top-center'

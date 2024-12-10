@@ -3,34 +3,42 @@ import axios from 'axios'
 import { backendUrl } from '../App'
 import toast from 'react-hot-toast';
 import Logo from './Logo';
+import { useContext } from 'react';
+import { ShopContext } from '../contexts/ShopContext';
+import { assets } from '../../../frontend/src/assets/assets';
 
-function Login({setToken}) {
+function Login() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { setToken } = useContext(ShopContext)
 
-  const handleLogin = async ()=> {
-    try { 
-      const response = await axios.post(backendUrl + '/api/user/admin', {email, password})
-      console.log(response)
-      if(response.data.success){
+  const handleLogin = async () => {
+    
+    try {
+      const response = await axios.post(backendUrl + '/api/user/admin', { email, password })
+      console.log(response, 'asdf')
+      if (response.data.success) {
         setToken(response.data.token)
-      }else{
+      } else {
         toast.error(response.data.message)
       }
     } catch (error) {
-        console.log(error)
-        toast.error(error.message)
+      console.log(error)
+      toast.error(error.message)
     }
   }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-lg">
-        {/* <Logo/> */}
+      <div className="w-full max-w-md p-8 space-y-3 bg-white rounded shadow-lg">
+        <img
+          src={assets.logo2}
+          alt="Logo"
+          className="w-[50%] m-auto"
+        />
         <h2 className="text-2xl font-bold text-center text-gray-800">Admin Dashboard</h2>
-        <p className="text-center text-gray-600">Sign in to your account</p>
-
+        <p className="text-center text-gray-600">Sign in to your admin account</p>
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Admin Email</label>

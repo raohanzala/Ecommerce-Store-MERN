@@ -1,6 +1,8 @@
 import React from 'react';
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+
+  console.log(currentPage, totalPages, onPageChange, 'Pagination')
   const handleClick = (page) => {
     if (page >= 1 && page <= totalPages) {
       onPageChange(page);
@@ -19,9 +21,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       pages.push(
         <button
           key={i}
-          className={`mx-1 px-4 py-2 rounded-full text-sm font-semibold transition-all shadow-sm ${
+          className={`mx-1 px-3 py-1 rounded-full text-xs font-semibold transition-all shadow-sm ${
             i === currentPage
-              ? 'bg-indigo-600 text-white scale-110'
+              ? 'bg-primary text-white scale-110'
               : 'bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white'
           }`}
           onClick={() => handleClick(i)}
@@ -38,10 +40,10 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     <div className="flex justify-center items-center gap-2 mt-6">
       {/* Previous Button */}
       <button
-        className={`px-4 py-2 rounded-full text-sm font-semibold transition-all shadow-sm ${
+        className={`px-4 py-2 rounded-full text-xs font-semibold transition-all shadow-sm ${
           currentPage === 1
             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            : 'bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white'
+            : 'bg-[#232323] text-gray-700 hover:bg-[#000] hover:text-white'
         }`}
         disabled={currentPage === 1}
         onClick={() => handleClick(currentPage - 1)}
@@ -54,7 +56,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
       {/* Next Button */}
       <button
-        className={`px-4 py-2 rounded-full text-sm font-semibold transition-all shadow-sm ${
+        className={`px-4 py-2 rounded-full text-xs font-semibold transition-all shadow-sm ${
           currentPage === totalPages
             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
             : 'bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white'

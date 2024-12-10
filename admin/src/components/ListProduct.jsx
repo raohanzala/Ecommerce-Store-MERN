@@ -1,114 +1,99 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
-import axios from 'axios'
-import { assets } from '../../../frontend/src/assets/assets'
-import { backendUrl } from '../App'
-import toast from 'react-hot-toast';
 import { ShopContext } from '../contexts/ShopContext';
 import SearchSortBar from './SearchSortBar';
 import { IoMdMore } from 'react-icons/io';
 import { IoMdTrash } from "react-icons/io";
 import { BiPencil } from "react-icons/bi";
 import { MdRemoveRedEye } from "react-icons/md";
-import Pagination from './Pagination';
-import Drawer from './Drawer';
 import ConfirmationModal from './ConfirmationModal';
 import AddProductModal from './AddProductModal';
 import { FaPlus } from "react-icons/fa6";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
+import Box from './Box';
+import Loader from './Loader';
+import Modal from './Modal';
+import ProductDrawer from './ProductDrawer';
 
+const ListProduct = () => {
 
-
-
-const ListProduct = ({ token }) => {
-
-  const [allproducts, setAllProducts] = useState([])
-
-  // const [orders, setOrders] = useState([]); // State to hold orders
-  const [selectedItem, setSelectedItem] = useState(null); // Selected order for the drawer
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Drawer visibility
-  const [isAnimating, setIsAnimating] = useState(false); // Animation for the drawer
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Number of products per page
-  const [totalPages, setTotalPages] = useState(1);
-
+  const itemsPerPage = 10;
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isModalOpen, setModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
-
   const columns = ["S.No", "Images", "Name", "Price", "Availability", "Category", "Action"];
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
 
-
-
+  const { initialLoading, productLoading, setPageTitle, currentPage, formatAmount, totalPages, allProducts, fetchPaginatedList, removeProduct } = useContext(ShopContext)
 
   const handleDropdownToggle = useCallback((productId) => {
     setActiveDropdown((prev) => (prev === productId ? null : productId));
   }, []);
 
-  const { isLoading, setIsLoading, setPageTitle } = useContext(ShopContext)
-  console.log(allproducts)
+  const observerRef = useRef(null); 
+  const scrollTargetRef = useRef(null); 
 
-  const fetchList = async (page = 1, limit = 5) => {
-    setIsLoading(true);
-    try {
-      const response = await axios.get(`${backendUrl}/api/product/paginated-list?page=${page}&limit=${limit}`, {
-        headers: { token },
-      });
-  
-      console.log(response, 'fetchpaginaitn')
-      if (response.data.success) {
-        setAllProducts(response.data.products); 
-        setCurrentPage(page); 
-  setTotalPages(response.data.totalPages);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message);
-    } finally {
-      setIsLoading(false);
+  const loadMoreProducts = useCallback(() => {
+    if (!isFetchingMore && currentPage < totalPages) {
+      setIsFetchingMore(true);
+      fetchPaginatedList(currentPage + 1, 10)
+        .catch((error) => console.error('Error loading products:', error))
+        .finally(() => setIsFetchingMore(false));
     }
-  };
+  }, [isFetchingMore, currentPage, totalPages, fetchPaginatedList]);
+  
   
 
-  console.log(selectedItem)
-
-
-  const removeProduct = async (id) => {
-    setIsLoading(true)
-    try {
-      const response = await axios.post(backendUrl + '/api/product/remove', { id }, { headers: { token } })
-      console.log(response)
-      if (response.data.success) {
-        toast.success(response.data.message)
-        await fetchList()
-      } else {
-        toast.error(response.data.message)
-      }
-
-    } catch (error) {
-      console.log(error)
-      toast.error(error.message)
-    } finally {
-      setIsLoading(false)
+  // Infinite scroll logic using IntersectionObserver
+  useEffect(() => {
+    // Disconnect any previously attached observer
+    if (observerRef.current instanceof IntersectionObserver) {
+      observerRef.current.disconnect();
     }
-  }
+  
+    // Create a new instance of the IntersectionObserver
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !isFetchingMore) {
+          console.log('Intersection triggered, loading more products...');
+          loadMoreProducts();
+        }
+      },
+      { threshold: 0.5 } // Trigger when 50% of the element is visible
+    );
+  
+    if (scrollTargetRef.current) {
+      observerRef.current.observe(scrollTargetRef.current);
+    }
+  
+    // Cleanup function to disconnect the observer
+    return () => {
+      if (observerRef.current instanceof IntersectionObserver) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [loadMoreProducts, isFetchingMore]);
+  
   const handleDeleteClick = (productId) => {
-    setProductToDelete(productId); // Set the product ID for deletion
-    setIsModalVisible(true); // Show the confirmation modal
+    setProductToDelete(productId);
+    setIsModalVisible(true);
   };
 
   const handleConfirmDelete = async () => {
     if (productToDelete) {
       await removeProduct(productToDelete);
-      setProductToDelete(null); // Clear the stored product ID
-      setIsModalVisible(false); // Close the modal
+      setProductToDelete(null);
+      setIsModalVisible(false);
     }
   };
 
   const handleCancel = () => {
-    setProductToDelete(null); // Clear the stored product ID
-    setIsModalVisible(false); // Close the modal
+    setProductToDelete(null);
+    setIsModalVisible(false);
   };
 
   const handleProductClick = (order) => {
@@ -118,7 +103,6 @@ const ListProduct = ({ token }) => {
     setTimeout(() => setIsAnimating(true), 10);
   };
 
-  // Close drawer
   const closeDrawer = () => {
     setIsAnimating(false);
     setTimeout(() => {
@@ -128,7 +112,7 @@ const ListProduct = ({ token }) => {
   };
 
   const handlePageChange = (page) => {
-    fetchList(page, itemsPerPage)
+    fetchPaginatedList(page, itemsPerPage)
   };
 
   const wrapperRef = useRef(null)
@@ -136,41 +120,53 @@ const ListProduct = ({ token }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        setActiveDropdown(null) // Close dropdown when clicked outside
+        setActiveDropdown(null)
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside); // Add event listener
+    document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside); // Clean up event listener
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
-
   useEffect(() => {
-    // setAllProducts([{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" },{ userId: 1893218, items: [{price : 3400, name : 'Rolex Yatch Master'}], paymentMethod : 'COD', amount: 12000, status: "Pending", address : 'Saddar Karachi', date: "2024-10-01" }])
-    // setPageTitle("List Products")
-    // return () => setIsLoading(false);
-  }, [setPageTitle])
-
-  useEffect(() => {
-    fetchList()
     setPageTitle("All Products")
-    return () => setIsLoading(false);
-  }, [setIsLoading])
-
+  }, [])
 
   return (
     <div>
-
-      <div className='flex gap-5 mb-6'>
-        <SearchSortBar placeholder="Search product" options={['recent', 'date']} />
+      {initialLoading && <Loader type='full' />}
+      <div className='flex gap-5 mb-4'>
+        <SearchSortBar placeholder="Search product" sortOptions={['recent', 'date']} filterOptions={['recent', 'date']} />
         <button onClick={() => setModalOpen(true)} className='px-4 border-0 bg-primary text-nowrap rounded-md text-white flex items-center justify-center gap-2 text-sm font-medium'><FaPlus />
           Add Product</button>
       </div>
-      <div className="mt-1">
-        <table className="min-w-full bg-white rounded-md ">
+      <Box className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <OverviewCard
+          title="Total Products"
+          value={allProducts?.length || 0}
+          icon={<IoMdMore className="text-xl text-primary" />}
+        />
+        <OverviewCard
+          title="Total Revenue"
+          value={`$${allProducts?.reduce((acc, prod) => acc + (prod.newPrice || 0), 0).toFixed(2)}`}
+          icon={<MdRemoveRedEye className="text-xl text-green-600" />}
+        />
+        <OverviewCard
+          title="Out of Stock"
+          value={allProducts?.filter(prod => !prod.availibility).length}
+          icon={<IoMdTrash className="text-xl text-red-500" />}
+        />
+        <OverviewCard
+          title="Best Seller"
+          value="Rolex Watch"
+          icon={<BiPencil className="text-xl text-yellow-500" />}
+        />
+      </Box>
+      <div className="mt-1 pb-5">
+        <table className="min-w-full bg-white border shadow-sm">
           <thead>
             <tr className="bg-[#f2f2f2af] text-[#5c5c5c] text-sm">
               {columns.map((col) => (
@@ -179,28 +175,32 @@ const ListProduct = ({ token }) => {
             </tr>
           </thead>
           <tbody>
-            {allproducts?.length > 0 ? (
-              allproducts.map((product, index) => (
+            {productLoading ? (
+              Array(10).fill().map((_, i) => <SkeletonRow key={i} />)
+            ) : (allProducts?.length > 0 ? (
+              allProducts.map((product, index) => (
                 <tr key={product._id} className="border-b text-center text-sm">
                   <td className="border py-2 px-4 border-r">{index + 1}</td>
-
-                  {/* Image Column with Specific Width */}
                   <td className="py-2 px-4">
-
-                    <img
+                    <LazyLoadImage
                       key={product.image[0]}
                       src={product.image[0]}
+                      effect='blur'
                       alt={`Product ${product.name}`}
-                      className="w-12 h-12 shrink-0 object-cover mx-auto rounded-sm transition-transform transform hover:scale-105 cursor-pointer"
+                      className="w-8 h-8 shrink-0 object-cover mx-auto rounded-sm transition-transform transform hover:scale-105 cursor-pointer"
                     />
                   </td>
 
                   <td className="border py-2 px-4 text-left">{product.name || 'Rolex Watch'}</td>
-                  <td className="border py-2 px-4">{product.newPrice || '3,999'}</td>
-                  <td className="border py-2 px-4 text-left">{product.availibility ? 'In Stock' : 'Out of stock'}</td>
+                  <td className="border py-2 px-4">{formatAmount(product.newPrice) || '3,999'}</td>
+                  <td
+                    className={`border py-2 px-4 text-left 
+    ${product.availibility ? 'text-green-600 font-semibold' : 'text-red-500 font-semibold'}`}
+                  >
+                    {product.availibility ? 'In Stock' : 'Out of Stock'}
+                  </td>
                   <td className="border py-2 px-4 capitalize">{product.category || "Men's"}</td>
 
-                  {/* Action Column */}
                   <td className="border py-2 px-4 text-xl relative cursor-pointer">
                     <button
                       aria-label={`Open actions for product ${product.name}`}
@@ -213,7 +213,6 @@ const ListProduct = ({ token }) => {
                       <IoMdMore className="m-auto" />
                     </button>
 
-                    {/* Dropdown */}
                     {activeDropdown === product._id && (
                       <div
                         className="absolute text-sm right-4 top-10 bg-white shadow-lg z-20 border rounded-sm p-1 w-36"
@@ -221,7 +220,7 @@ const ListProduct = ({ token }) => {
                           e.stopPropagation();
                           setActiveDropdown(null);
                         }}
-                        ref={wrapperRef} // Prevent modal click closing
+                        ref={wrapperRef}
                       >
                         <ul className="text-left">
                           <li className="px-2 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
@@ -247,89 +246,81 @@ const ListProduct = ({ token }) => {
               <tr>
                 <td
                   colSpan="7"
-                  className="py-4 text-center text-gray-500"
+                  className="py-4 text-base text-center text-[#c3c3c3]"
                 >
-                  No Products found.
+                  No products found.
                 </td>
-              </tr>
+              </tr>)
             )}
           </tbody>
         </table>
-        <Pagination
-  currentPage={currentPage}
-  totalPages={totalPages}
-  onPageChange={handlePageChange}
-/>
-      </div>
+
+<div ref={observerRef} className="h-10 w-full bg-red-300"></div>
+{isFetchingMore && <Loader />}
+        {/* { <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        /> */}
+      </div> 
+
+      {isDrawerOpen && <ProductDrawer title={'Product Details'} selectedItem={selectedItem} closeDrawer={closeDrawer} isAnimating={isAnimating} />}
 
       <ConfirmationModal show={isModalVisible} title={'Delete Product'} message={'Are you sure you want to delete this product?'} confirmText={'Delete'} cancelText={'Cancel'} onConfirm={handleConfirmDelete}
         onCancel={handleCancel}
         onClose={() => setIsModalVisible(false)} />
 
-      {isDrawerOpen && <Drawer title={'Product Details'} selectedItem={selectedItem} closeDrawer={closeDrawer} isAnimating={isAnimating} />}
-
-
-
-      {/* Drawer for Order Details */}
-      {/* {isDrawerOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-30 flex justify-end z-20"
-          onClick={closeDrawer}
-        >
-          <div
-            className={`bg-white w-96 p-6 shadow-lg transform transition-transform duration-300 ${isAnimating ? 'translate-x-0' : 'translate-x-full'
-              }`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={closeDrawer}
-              aria-label="Close drawer"
-              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 focus:outline-none"
-            >
-              ✕
-            </button>
-            <h2 className="text-xl font-semibold mb-4">Product Details</h2>
-            <>
-              <p className="mb-5 text-gray-600 text-sm">Date: {formatTimestamp(selectedItem.date)}</p>
-              <div className="flex items-start gap-5">
-                <div className="space-y-2 text-gray-600 text-sm">
-                  <p>Product ID:</p>
-                  <p>Name:</p>
-                  <p>Description:</p>
-                  <p>New Price:</p>
-                  <p>Old Price:</p>
-                  <p>Availibility:</p>
-                  <p>Category:</p>
-                  <p>Sub-Category:</p>
-                  <p>Bestseller:</p>
-                  {selectedItem.sizes.length > 0 && <p>Size</p>}
-                </div>
-                <div className="space-y-2 text-sm">
-                  <p>{selectedItem._id}</p>
-                  <p>{selectedItem.name}</p>
-                  <p>{selectedItem.description}</p>
-                  <p>{selectedItem.newPrice}</p>
-                  <p>{selectedItem.oldPrice}</p>
-                  <p>{selectedItem.availibility ? 'In Stock' : 'Out of Stock'}</p>
-                  <p>{selectedItem.category}</p>
-                  <p>{selectedItem.subCategory}</p>
-                  <p>{selectedItem.bestSeller && 'Bestseller'}</p>
-
-                </div>
-              </div>
-            </>
-          </div>
-        </div>
-      )} */}
-
-      <AddProductModal
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-        token={token}
-        fetchList={fetchList}
-      />
+      <Modal isOpen={isModalOpen} title='Add Product'
+        onClose={() => setModalOpen(false)}>
+        <AddProductModal onClose={() => setModalOpen(false)} />
+      </Modal>
     </div>
   )
 }
+
+const OverviewCard = ({ isLoading, title, value, icon }) => {
+  return (
+    <div className="p-4 rounded border flex items-center">
+      <div className="flex items-center justify-center rounded-full w-8 h-8 bg-gray-100 mr-4">
+        {icon}
+      </div>
+      <div>
+        <h3 className="text-xs font-semibold text-gray-500">{title}</h3>
+        {isLoading && isLoading ? (
+          <div className="h-4 bg-gray-300 rounded w-12 mt-1"></div>
+        ) : (
+          <p className="text-md font-bold text-gray-800">{value}</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// const OverviewCard = ({ title, value, icon }) => {
+//   return (
+//     <div className="bg-white border border-gray-200 p-2 rounded flex items-center justify-between">
+//       <div className="flex flex-col">
+//         <h3 className="text-xs font-semibold text-gray-500">{title}</h3>
+//         <p className="text-md font-bold text-gray-800">{value}</p>
+//       </div>
+//       <div className="flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full">
+//         {icon}
+//       </div>
+//     </div>
+//   );
+// };
+
+const SkeletonRow = () => (
+  <tr className="animate-pulse">
+    <td className="p-4"><div className="h-4 bg-gray-300 rounded"></div></td>
+    <td className="p-4"><div className="w-12 h-12 bg-gray-300 rounded"></div></td>
+    <td className="p-4"><div className="h-4 bg-gray-300 rounded"></div></td>
+    <td className="p-4"><div className="h-4 bg-gray-300 rounded"></div></td>
+    <td className="p-4"><div className="h-4 bg-gray-300 rounded"></div></td>
+    <td className="p-4"><div className="h-4 bg-gray-300 rounded"></div></td>
+    <td className="p-4"><div className="h-4 bg-gray-300 rounded"></div></td>
+  </tr>
+);
+
 
 export default ListProduct

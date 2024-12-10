@@ -6,19 +6,15 @@ import { ShopContext } from "../contexts/ShopContext";
 import Loader from "../components/Loader";
 
 function AppLayout({ children }) {
-  const {isLoading} = useContext(ShopContext)
+  // const {isLoading} = useContext(ShopContext)
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Sidebar fixed to the left side */}
       <SideBar />
 
-      {/* Main content area */}
       <main className="flex flex-col w-full h-full">
-        {/* Header fixed at the top */}
         <Header/>
-        {isLoading && <Loader/>}
-        {/* Scrollable content area */}
+        {/* {isLoading && <Loader/>} */}
         <div className="flex-1 overflow-y-auto bg-[#FAFAFA] py-8 px-8">
           {children}
         </div>

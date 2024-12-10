@@ -3,6 +3,7 @@ import { ShopContext } from '../context/ShopContext'
 import Title from '../components/Title'
 import { assets } from '../assets/assets'
 import CartTotal from '../components/CartTotal'
+import toast from 'toast'
 
 const Cart = () => {
 
@@ -37,7 +38,7 @@ const Cart = () => {
 
 
   return (
-    <div className='border-t pt-14 max-w-[1280px] mx-auto'>
+    <div className='border-t pt-14 max-w-[1280px] mx-auto px-5'>
       <div className="text-2xl mb-3">
         <Title text1={'YOUR'} text2={'CART'} />
       </div>
@@ -73,7 +74,13 @@ const Cart = () => {
         <div className='w-full sm:w-[450px]'>
           <CartTotal />
           <div className='w-full text-end'>
-            <button onClick={() => navigate('/place-order')} className='bg-black text-white text-sm my-8 px-8 py-3'>PROCEED TO CHEKOUT</button>
+            <button onClick={() => {
+              if(!cartItems){
+                navigate('/place-order')
+              }else{
+                toast.error('Your cart is empty.')
+              }
+              }} className='bg-black text-white text-sm my-8 px-8 py-3'>PROCEED TO CHEKOUT</button>
           </div>
         </div>
       </div>

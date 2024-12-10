@@ -4,8 +4,9 @@ import { assets } from '../../../frontend/src/assets/assets';
 import axios from 'axios';
 import { backendUrl } from '../App';
 import { ShopContext } from '../contexts/ShopContext';
+import Button from './BUtton';
 
-const AddProductModal = ({ token, isOpen, onClose, fetchList }) => {
+const AddProductModal = ({onClose}) => {
   const [image1, setImage1] = useState(false);
   const [image2, setImage2] = useState(false);
   const [image3, setImage3] = useState(false);
@@ -21,7 +22,7 @@ const AddProductModal = ({ token, isOpen, onClose, fetchList }) => {
   const [sizes, setSizes] = useState([]);
   const [availability, setAvailability] = useState('in_stock');
 
-  const { setIsLoading,isLoading, setPageTitle } = useContext(ShopContext);
+  const { setActionLoading,actionLoading, setPageTitle, fetchPaginatedList, token } = useContext(ShopContext);
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -43,7 +44,7 @@ const AddProductModal = ({ token, isOpen, onClose, fetchList }) => {
       return;
     }
 
-    setIsLoading(true);
+    setActionLoading(true);
 
     try {
       const formData = new FormData();
@@ -83,38 +84,24 @@ const AddProductModal = ({ token, isOpen, onClose, fetchList }) => {
         setImage2(false);
         setImage3(false);
         setImage4(false);
-        fetchList()
-        onClose();
+        fetchPaginatedList()
+        onClose()
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
       toast.error(error.message);
     } finally {
-      setIsLoading(false);
+      setActionLoading(false);
     }
   };
 
   useEffect(() => {
     setPageTitle('Add Product');
-    return () => setIsLoading(false);
-  }, [setIsLoading]);
-
-  if (!isOpen) return null;
+  }, []);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl max-h-[90vh] p-8 relative overflow-y-scroll">
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-2xl text-gray-600 hover:text-black"
-        >
-          &times;
-        </button>
-
-        <h2 className="text-2xl mb-6 text-center font-semibold">Add Product</h2>
-
+      <div className="bg-white rounded-lg w-full max-w-3xl max-h-[90vh] relative">
         <form onSubmit={onSubmitHandler}>
           <div className="grid grid-cols-1 text-sm lg:grid-cols-2 gap-6">
             {/* Left Column */}
@@ -153,11 +140,11 @@ const AddProductModal = ({ token, isOpen, onClose, fetchList }) => {
                   />
                 </label>
                 <label className="block">
-                  <span className="text-base">Offer Price</span>
+                  <span className="text-base">Sale Price</span>
                   <input
                     type="number"
                     className="w-full mt-1 text-sm p-2 border rounded focus:outline-none focus:ring-primary focus:ring-1"
-                    placeholder="Discounted price"
+                    placeholder="Sale price"
                     value={newPrice}
                     onChange={(e) => setNewPrice(e.target.value)}
                   />
@@ -179,7 +166,7 @@ const AddProductModal = ({ token, isOpen, onClose, fetchList }) => {
 
             {/* Right Column */}
             <div>
-              <label className="block mb-4">
+              {/* <label className="block mb-4">
                 <span className="text-base">Sizes</span>
                 <div className="flex gap-2 mt-2">
                   {['S', 'M', 'L', 'XL', 'XXL'].map((size) => (
@@ -198,7 +185,7 @@ const AddProductModal = ({ token, isOpen, onClose, fetchList }) => {
                     </span>
                   ))}
                 </div>
-              </label>
+              </label> */}
 
               <label className="block mb-4">
                 <span className="text-base">Upload Images</span>
@@ -259,18 +246,18 @@ const AddProductModal = ({ token, isOpen, onClose, fetchList }) => {
               </div>
             </div>
           </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={`text-lg px-6 py-2 rounded mt-6 w-full ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-black text-white"
-              }`}
-          >
-            {isLoading ? "Adding..." : "Add Here"}
-          </button>
+          <div className='flex justify-between items-center mt-6'>
+            <Button type='button' btnType='cancel' onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit"
+              disabled={actionLoading} isLoading={actionLoading}>
+              Add product
+            </Button>
+          </div>
         </form>
       </div>
-    </div>
+    // </div>
   );
 };
 

@@ -4,15 +4,23 @@ import { assets } from '../assets/assets';
 import Title from '../components/Title';
 import ProductItem from '../components/ProductItem';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useRef } from 'react';
+import axios from 'axios'
 
 
 const Collection = () => {
-  const { products = [], search, showSearch } = useContext(ShopContext);
+  const { products = [], search, showSearch, backendUrl } = useContext(ShopContext);
   const [showFilter, setShowFilter] = useState(true);
   const [filterProducts, setFilterProducts] = useState([]);
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
   const [sortType, setSortType] = useState('relevant');
+
+  const [pageProducts, setPageProducts] = useState([]); // All loaded products
+  const [page, setPage] = useState(1); // Current page of products
+  const [isLoading, setIsLoading] = useState(false); // Loading indicator for infinite scroll
+  const [hasMore, setHasMore] = useState(true); // Flag to check if there are more products to load
+  const loaderRef = useRef(null); // Reference for infinite scroll detection
 
   const toggleCategory = (e) => {
     const { value } = e.target;
@@ -29,7 +37,7 @@ const Collection = () => {
   };
 
   const applyFilter = () => {
-    let productsCopy = [...products];
+    let productsCopy = [...pageProducts];
 
     if (showSearch && search) {
       productsCopy = productsCopy.filter(item =>
@@ -50,7 +58,7 @@ const Collection = () => {
 
   const sortProduct = (productsToSort) => {
     let sortedProducts = [...productsToSort];
-    
+
     switch (sortType) {
       case 'low-high':
         sortedProducts.sort((a, b) => a.newPrice - b.newPrice);
@@ -65,9 +73,62 @@ const Collection = () => {
     setFilterProducts(sortedProducts);
   };
 
+  const fetchProducts = async () => {
+    // if (isLoading) return; // Stop duplicate calls
+    setIsLoading(true);
+    try {
+      const response = await axios.get(backendUrl + `/api/product/paginated-list?page=${page}&limit=10`);
+      const newProducts = response.data.products;
+
+      console.log(response, 'paginatesd')
+
+      // Filter out duplicate products
+      setPageProducts((prevProducts) => {
+        const combinedProducts = [...prevProducts, ...newProducts];
+        const uniqueProducts = combinedProducts.filter(
+          (item, index, array) => array.findIndex(p => p._id === item._id) === index
+        );
+        return uniqueProducts;
+      });
+
+      // Correctly check pagination data
+      if (response.data.pagination.currentPage >= response.data.pagination.totalPages) {
+        setHasMore(false); // No more pages to load
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1); // Increment page to fetch new products
+        }
+      },
+      { root: null, rootMargin: '0px', threshold: 0.1 }
+    );
+
+    if (loaderRef.current) observer.observe(loaderRef.current);
+
+    // Clean up observer when component unmounts
+    return () => {
+      if (loaderRef.current) observer.unobserve(loaderRef.current);
+    };
+  }, [hasMore]);
+
+  useEffect(() => {
+    fetchProducts(page);
+  }, [page]);
+
+
   useEffect(() => {
     applyFilter();
-  }, [category, subCategory, search, showSearch, products]);
+  }, [category, subCategory, search, showSearch, pageProducts]);
 
   useEffect(() => {
     // Sort only if filterProducts has been set
@@ -76,10 +137,10 @@ const Collection = () => {
     }
   }, [sortType]);
 
-  if(!filterProducts){
-    return <LoadingSpinner/>
+  if (!filterProducts) {
+    return <LoadingSpinner />
   }
-  
+
 
   return (
     <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t max-w-[1280px] mx-auto'>
@@ -135,10 +196,10 @@ const Collection = () => {
 
         {/* Map Products */}
         <div className='relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6'>
-        {filterProducts.length > 0 && (
+          {filterProducts.length > 0 && (
             filterProducts.map((item) => (
               <ProductItem
-                key={item._id} 
+                key={item._id}
                 name={item.name}
                 description={item.description}
                 newPrice={item.newPrice}
@@ -151,8 +212,11 @@ const Collection = () => {
           )}
         </div>
 
-        
-          
+        {/* Infinite Scroll Loader */}
+        {isLoading && <p>Loader...</p>}
+        <div ref={loaderRef} className='h-10 w-full bg-red-500'></div>
+        {!hasMore && <p className='text-center text-gray-500 mt-4'>No more products to load</p>}
+
       </div>
     </div>
   );

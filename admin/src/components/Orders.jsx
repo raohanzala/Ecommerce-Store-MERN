@@ -1,50 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { backendUrl } from '../App';
-import { toast } from 'react-toastify';
+import { useContext } from 'react';
+import { ShopContext } from '../contexts/ShopContext';
 
-const Orders = ({ token }) => {
-  const [orders, setOrders] = useState([]);
+const Orders = () => {
 
-  const fetchAllOrders = async () => {
-    if (!token) {
-      return null;
-    }
-
-    try {
-      const response = await axios.post(backendUrl + '/api/order/list', {}, { headers: { token } });
-      if (response.data.success) {
-        setOrders(response.data.orders.reverse());
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
-
-  const statusHandler = async (event, orderId) => {
-    try {
-      const response = await axios.post(
-        backendUrl + '/api/order/status',
-        { orderId, status: event.target.value },
-        { headers: { token } }
-      );
-      if (response.data.success) {
-        toast.success('Order status updated successfully');
-        fetchAllOrders(); // Refresh the orders list
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message);
-    }
-  };
+const {orders, setIsLoading, fetchAllOrders, statusHandler} = useContext(ShopContext)
 
   useEffect(() => {
-    fetchAllOrders();
-  }, []);
+    // fetchAllOrders();
+    return () => setIsLoading(false);
+  }, [setIsLoading]);
 
   return (
     <div className="p-6">
@@ -52,7 +17,7 @@ const Orders = ({ token }) => {
       {orders.length === 0 ? (
         <p className="text-gray-500">No orders found.</p>
       ) : (
-        <table className="min-w-full border border-gray-300">
+        <table className="min-w-full border border-gray-300 shadow-md">
           <thead className="bg-gray-100 border-b">
             <tr>
               <th className="py-2 px-4 text-left">#</th>

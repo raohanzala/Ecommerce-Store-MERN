@@ -44,10 +44,9 @@ function SideBarItem() {
     { name: "profile", icon: <CgProfile />, route: "/profile" },
   ];
 
-  // Effect to clear notification when visiting the notifications tab
-  React.useEffect(() => {
+  useEffect(() => {
     if (location.pathname === "/notifications") {
-      setHasNotifications(false); // Clear notifications when the tab is visited
+      setHasNotifications(false); 
     }
   }, [location.pathname]);
 
@@ -61,21 +60,18 @@ function SideBarItem() {
             `flex items-center gap-0 md:gap-3 px-3 py-4 rounded-sm w-full capitalize font-medium transition-all duration-200
             ${
               isActive 
-                ? "bg-[#4f4f4f] text-primary" // Active state background
-                : "text-[#797979] hover:text-[#e4e4e4] " // Inactive state
+                ? "bg-[#4f4f4f] text-primary" 
+                : "text-[#797979] hover:text-[#e4e4e4] "
             }`
           }
         >
-          {/* Icon */}
           <span className="text-2xl w-fit relative">
             {item.icon}
-            {/* Red badge for notifications */}
             {notifications.length > 0 && item.name === "notifications" && (
               <span className="absolute top-0 right-0 flex justify-center items-center h-2 w-2 rounded-full bg-red-500  text-white"></span>
             )}
           </span>
           
-          {/* Name */}
           <span className="text-base hidden md:inline">{item.name}</span>
         </NavLink>
       ))}

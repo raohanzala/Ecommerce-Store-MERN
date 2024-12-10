@@ -13,7 +13,7 @@ const Footer = () => {
         {/* About Section */}
         <div className="flex flex-col mb-8 sm:mb-0">
           <img src={assets.logo4} className="mb-5 w-52 h-12" alt="Logo" />
-          <p className="text-[#969696] text-base leading-relaxed">
+          <p className="text-[#969696] text-sm leading-relaxed">
           Affordable watches, from budget-friendly to luxury – find your perfect timepiece at Realtime Wrist!
           </p>
         </div>
@@ -71,7 +71,7 @@ const Footer = () => {
       <div className="bg-[#cba135] py-3">
         <p className="text-center text-sm">
           Copyright {currentYear} @
-          <Link to="/" className="font-semibold hover:text-black transition-colors duration-200">
+          <Link to="/" className="font-semibold hover:text-[#232323] transition-colors duration-200">
             {' '}realtimewrist.pk{' '}
           </Link>
           - All Rights Reserved.

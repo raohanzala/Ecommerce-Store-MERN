@@ -56,6 +56,11 @@ const PlaceOrder = () => {
 
   const onSubmitHandler = async (e)=> {
     e.preventDefault()
+    console.log(cartItems, 'CArt')
+    if(cartItems){
+      toast.error('Your cart is empty')
+      return null
+    }
     try {
         let orderItems = []
 
@@ -98,7 +103,7 @@ const PlaceOrder = () => {
 
 
   return (
-    <form onSubmit={onSubmitHandler} className='flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t max-w-[1280px] mx-auto'>
+    <form onSubmit={onSubmitHandler} className='flex flex-col sm:flex-row justify-between gap-4 pt-5 px-5 sm:pt-14 min-h-[80vh] border-t max-w-[1280px] mx-auto'>
       {/* --------- Left Side ----------- */}
       <div className='flex flex-col gap-4 w-full sm:max-w-[480px]'>
         <div className='text-xl sm:text-2xl my-3'>
@@ -173,7 +178,7 @@ const PlaceOrder = () => {
 
       {/* ------------ Right Side ------------------- */}
       <div className='mt-8'>
-        <div className='mt-8 min-w-80'>
+        <div className='mt-8'>
           <CartTotal />
         </div>
 

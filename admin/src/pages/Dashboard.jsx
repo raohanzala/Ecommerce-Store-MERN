@@ -1,217 +1,164 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { ShopContext } from "../contexts/ShopContext";
-import toast from "react-hot-toast";
-import { backendUrl } from "../App";
-import axios from "axios";
-import { FaShoppingCart, FaDollarSign, FaBoxes, FaUsers } from "react-icons/fa"; // Correct Import Position
+import Box from "../components/Box";
+import HeadingLink from "../components/HeadingLink";
+import Loader from "../components/Loader";
+import { FiShoppingBag, FiUsers, FiDollarSign, FiBox } from 'react-icons/fi'; // Import Icons
 
-const Dashboard = ({ token }) => {
-  const { setPageTitle, setIsLoading } = useContext(ShopContext);
-  const [orders, setOrders] = useState([]);
-  const [allProducts, setAllProducts] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
+const Dashboard = () => {
+  const { 
+    setPageTitle, 
+    allUsers, 
+    formatAmount, 
+    orders, 
+    initialLoading, 
+    allProducts, 
+    timestampToShortDate, 
+    productLoading, 
+    ordersLoading, 
+    usersLoading 
+  } = useContext(ShopContext);
 
-  const totalRevenue = orders
-    .map((order) => order.amount)
+  const totalRevenue = orders?.map((order) => order.amount)
     .reduce((total, amount) => total + amount, 0);
-
-  // Fetch all orders
-  const fetchAllOrders = async () => {
-    setIsLoading(true);
-    if (!token) return;
-
-    try {
-      const response = await axios.post(
-        `${backendUrl}/api/order/list`,
-        {},
-        { headers: { token } }
-      );
-      if (response.data.success) {
-        setOrders(response.data.orders.reverse());
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Fetch all products
-  const fetchList = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.get(backendUrl + "/api/product/list", {
-        headers: { token },
-      });
-      if (response.data.success) {
-        setAllProducts(response.data.products);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Fetch all users
-  const fetchAllUsers = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.get(backendUrl + "/api/user/users", {
-        headers: { token },
-      });
-      if (response.data.success) {
-        setAllUsers(response.data.users);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Format amount in the desired format
-  function formatAmount(amount) {
-    if (typeof amount !== "number") {
-      throw new Error("Input must be a number");
-    }
-
-    const [integerPart, decimalPart] = amount.toString().split(".");
-
-    const formattedInteger = integerPart
-      .replace(/\B(?=(\d{2})+(?=\d{3}))/g, ",")
-      .replace(/(\d)(?=(\d{3})+$)/, "$1,");
-
-    return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
-  }
 
   useEffect(() => {
     setPageTitle("Dashboard");
-    fetchAllOrders();
-    fetchAllUsers();
-    fetchList();
   }, []);
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      {/* Overview Cards */}
+    <div className="p-6 bg-gray-50 min-h-screen">
+      {initialLoading && <Loader type='full' />}
+      
+      {/* Page Header */}
+      <header className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
+        <p className="text-gray-600">Welcome back! Here’s what’s happening with your store today.</p>
+      </header>
+
+      {/* Metric Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        {/* Total Orders */}
-        <div className="bg-white shadow rounded-lg p-4 flex items-center">
-          <div className="p-3 bg-blue-100 rounded-full">
-            <FaShoppingCart className="text-blue-600 h-8 w-8" />
+        <Box className="bg-white shadow-md rounded-lg p-6">
+          <div className="flex items-center">
+            <FiShoppingBag className="text-blue-600 text-3xl" />
+            <div className="ml-4">
+              <h3 className="text-lg font-semibold text-gray-600">Total Orders</h3>
+              {ordersLoading ? <Loader /> : (
+                <>
+                  <p className="text-3xl font-bold text-blue-600 mt-2">{orders?.length}</p>
+                  <p className="text-sm text-gray-500 mt-1">+10% from last month</p>
+                </>
+              )}
+            </div>
           </div>
-          <div className="ml-4">
-            <h3 className="text-lg font-semibold text-gray-600">Total Orders</h3>
-            <p className="text-3xl font-bold text-blue-600 mt-2">{orders.length}</p>
-            <p className="text-sm text-gray-500 mt-1">+10% from last month</p>
-          </div>
-        </div>
+        </Box>
 
-        {/* Revenue */}
-        <div className="bg-white shadow rounded-lg p-4 flex items-center">
-          <div className="p-3 bg-green-100 rounded-full">
-            <FaDollarSign className="text-green-600 h-8 w-8" />
+        <Box className="bg-white shadow-md rounded-lg p-6">
+          <div className="flex items-center">
+            <FiDollarSign className="text-green-600 text-3xl" />
+            <div className="ml-4">
+              <h3 className="text-lg font-semibold text-gray-600">Total Revenue</h3>
+              {ordersLoading ? <Loader /> : (
+                <>
+                  <p className="text-3xl font-bold text-green-600 mt-2">{formatAmount(totalRevenue || 9000)}</p>
+                  <p className="text-sm text-gray-500 mt-1">+15% from last month</p>
+                </>
+              )}
+            </div>
           </div>
-          <div className="ml-4">
-            <h3 className="text-lg font-semibold text-gray-600">Revenue</h3>
-            <p className="text-3xl font-bold text-green-600 mt-2">
-              {formatAmount(totalRevenue)}
-            </p>
-            <p className="text-sm text-gray-500 mt-1">+15% from last month</p>
-          </div>
-        </div>
+        </Box>
 
-        {/* Total Products */}
-        <div className="bg-white shadow rounded-lg p-4 flex items-center">
-          <div className="p-3 bg-purple-100 rounded-full">
-            <FaBoxes className="text-purple-600 h-8 w-8" />
+        <Box className="bg-white shadow-md rounded-lg p-6">
+          <div className="flex items-center">
+            <FiBox className="text-purple-600 text-3xl" />
+            <div className="ml-4">
+              <h3 className="text-lg font-semibold text-gray-600">Total Products</h3>
+              {productLoading ? <Loader /> : (
+                <>
+                  <p className="text-3xl font-bold text-purple-600 mt-2">{allProducts?.length}</p>
+                  <p className="text-sm text-gray-500 mt-1">+5% from last month</p>
+                </>
+              )}
+            </div>
           </div>
-          <div className="ml-4">
-            <h3 className="text-lg font-semibold text-gray-600">Total Products</h3>
-            <p className="text-3xl font-bold text-purple-600 mt-2">{allProducts.length}</p>
-            <p className="text-sm text-gray-500 mt-1">+5% from last month</p>
-          </div>
-        </div>
+        </Box>
 
-        {/* Active Users */}
-        <div className="bg-white shadow rounded-lg p-4 flex items-center">
-          <div className="p-3 bg-yellow-100 rounded-full">
-            <FaUsers className="text-yellow-600 h-8 w-8" />
+        <Box className="bg-white shadow-md rounded-lg p-6">
+          <div className="flex items-center">
+            <FiUsers className="text-yellow-600 text-3xl" />
+            <div className="ml-4">
+              <h3 className="text-lg font-semibold text-gray-600">Active Users</h3>
+              {usersLoading ? <Loader /> : (
+                <>
+                  <p className="text-3xl font-bold text-yellow-600 mt-2">{allUsers?.length}</p>
+                  <p className="text-sm text-gray-500 mt-1">+8% from last week</p>
+                </>
+              )}
+            </div>
           </div>
-          <div className="ml-4">
-            <h3 className="text-lg font-semibold text-gray-600">Active Users</h3>
-            <p className="text-3xl font-bold text-yellow-600 mt-2">{allUsers?.length}</p>
-            <p className="text-sm text-gray-500 mt-1">+8% from last week</p>
-          </div>
-        </div>
+        </Box>
       </div>
 
-      {/* Recent Orders Section */}
-      <div className="bg-white shadow rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Recent Orders</h2>
+      {/* Recent Orders */}
+      <Box className="bg-white shadow-md rounded-lg mb-6">
+        <HeadingLink title="Recent Orders" link="/orders" />
         <div className="overflow-x-auto">
-          <table className="table-auto w-full text-left border-collapse">
-            <thead>
-              <tr>
-                <th className="px-4 py-2 border-b text-sm font-medium text-gray-600">Order ID</th>
-                <th className="px-4 py-2 border-b text-sm font-medium text-gray-600">Customer</th>
-                <th className="px-4 py-2 border-b text-sm font-medium text-gray-600">Total</th>
-                <th className="px-4 py-2 border-b text-sm font-medium text-gray-600">Status</th>
-                <th className="px-4 py-2 border-b text-sm font-medium text-gray-600">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.slice(0, 5).map((order) => (
-                <tr key={order._id}>
-                  <td className="px-4 py-2 border-b text-sm text-gray-700">{order._id}</td>
-                  <td className="px-4 py-2 border-b text-sm text-gray-700">{order.address.name}</td>
-                  <td className="px-4 py-2 border-b text-sm text-gray-700">{order.amount}</td>
-                  <td className="px-4 py-2 border-b text-sm text-gray-700">{order.status}</td>
-                  <td className="px-4 py-2 border-b text-sm text-gray-700">{order.date}</td>
+          {ordersLoading ? <Loader /> : orders?.length > 0 ? (
+            <table className="w-full table-auto">
+              <thead className="bg-gray-100">
+                <tr>
+                  {['Order ID', 'Customer', 'Total', 'Status', 'Date'].map((header) => (
+                    <th key={header} className="px-4 py-2 text-sm font-semibold text-gray-600">{header}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {orders.slice(0, 5).map((order) => (
+                  <tr key={order._id} className="hover:bg-gray-50">
+                    <td className="px-4 py-2">{order._id}</td>
+                    <td className="px-4 py-2">{order.address.firstName} {order.address.lastName}</td>
+                    <td className="px-4 py-2">{formatAmount(order.amount)}</td>
+                    <td className="px-4 py-2">{order.status}</td>
+                    <td className="px-4 py-2">{timestampToShortDate(order.date)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="text-gray-400 text-center py-4">No orders found.</p>
+          )}
         </div>
-      </div>
+      </Box>
 
-      {/* Additional Insights */}
+      {/* Top Products and Latest Customers */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Top Products */}
-        <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Top Products</h2>
-          <ul className="space-y-2">
-            {allProducts.slice(0, 3).map((product) => (
-              <li key={product._id} className="flex justify-between text-gray-700">
-                <span>{product.name}</span>
-                <span className="font-bold">{formatAmount(product.newPrice)}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Box className="bg-white shadow-md rounded-lg">
+          <HeadingLink title="Top Products" link="/list" />
+          {productLoading ? <Loader /> : (
+            <ul className="space-y-4 p-4">
+              {allProducts.slice(0, 3).map((product) => (
+                <li key={product._id} className="flex items-center space-x-4">
+                  <img src={product.image[0]} className="w-12 h-12 rounded" alt={product.name} />
+                  <span>{product.name}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Box>
 
-        {/* Latest Customers */}
-        <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Latest Customers</h2>
-          <ul className="space-y-2">
-            {allUsers.slice(0, 3).map((user) => (
-              <li key={user._id} className="flex justify-between text-gray-700">
-                <span>{user.name}</span>
-                <span className="text-sm text-gray-500">{user.date}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Box className="bg-white shadow-md rounded-lg">
+          <HeadingLink title="Latest Customers" link="/orders" />
+          {usersLoading ? <Loader /> : (
+            <ul className="space-y-4 p-4">
+              {allUsers.slice(0, 3).map((user) => (
+                <li key={user._id} className="flex items-center justify-between">
+                  <span>{user.name}</span>
+                  <span className="text-sm text-gray-500">{timestampToShortDate(user.date)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Box>
       </div>
     </div>
   );

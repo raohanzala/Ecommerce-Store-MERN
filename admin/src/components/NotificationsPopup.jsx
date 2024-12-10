@@ -13,7 +13,7 @@ const NotificationsPopup = () => {
   const hasNotifications = notifications.length > 10;
 
   return (
-    <div className="absolute right-4 top-14 w-72 bg-white shadow-lg rounded-lg p-4 py-5 z-50 border border-gray-200">
+    <div className="absolute right-4 top-16 w-72 bg-white shadow-lg rounded-lg p-4 py-5 z-50 border border-gray-200">
       {hasNotifications ? (
         <>
           <h3 className="text-lg font-semibold mb-3">Notifications</h3>
@@ -37,7 +37,7 @@ const NotificationsPopup = () => {
           <span className="text-3xl text-gray-50 bg-[#f3e9c1] rounded-full p-3 mb-2"><MdOutlineNotificationsOff/>
           </span>
           <p className="text-[#333] mb-2">No new notifications</p>
-          <p className='text-xs text-[#6a6a6a]'>We'll notify you about important updates in BidBazaar.</p>
+          <p className='text-xs text-[#6a6a6a]'>We'll notify you about important updates in Realtime Wrist.</p>
         </div>
       )}
     </div>

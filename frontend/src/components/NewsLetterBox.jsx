@@ -5,7 +5,6 @@ const NewsLetterBox = () => {
 
   const onSubmitHandler= (e)=>{
     e.preventDefault()
-    
   }
 
   return (
@@ -16,6 +15,7 @@ const NewsLetterBox = () => {
         <input className='w-full sm:flex-1 outline-none' type="email" placeholder='Enter your email for newslatter' required />
         <button type='submit' className='bg-[#232323] text-white text-xs font-semibold px-4 py-4'>SUBSCIRBE</button>
       </form>
+        <p className=' text-gray-600 mt-4 text-sm'>By signing up, you agree to our Terms of Service and Privacy Policy.</p>
     </div>
   )
 }

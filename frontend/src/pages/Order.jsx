@@ -47,14 +47,14 @@ const Order = () => {
 
 
   return (
-    <div className='border-t pt-16 max-w-[1180px] mx-auto'>
+    <div className='border-t pt-16 max-w-[1180px] mx-auto px-5'>
 
 <div className='text-2xl'>
   <Title text1={'MY'} text2={'ORDERS'}/>
 </div>
 
 <div>
-  {orderData.map((item, index)=>(
+  {orderData.length>0 ? orderData.map((item, index)=>(
     <div key={index} className='py-4 border-t border-b text-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
        <div className='flex items-start gap-6 text-sm'>
         <img  className='w-16 sm:w-20' src={item.image[0]} alt="" />
@@ -79,7 +79,9 @@ const Order = () => {
        <button onClick={loadOrderData} className='border px-4 py-2 text-sm font-medium rounded-sm'>Track Order</button>
        </div>
     </div>
-  ))}
+  )) : <div className='py-9 flex items-center justify-center'>
+  <p className='text-xl text-[#d2d2d2]'>You have no orders yet.</p>
+</div>}
 </div>
 
     </div>

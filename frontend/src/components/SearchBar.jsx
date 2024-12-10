@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useCallback } from 'react';
 import { useContext } from 'react';
 import { ShopContext } from '../context/ShopContext';
+import LoadingSpinner from './LoadingSpinner';
 
 const SearchBar = ({ setShowSearch }) => {
   const [query, setQuery] = useState('');
@@ -74,7 +75,7 @@ const SearchBar = ({ setShowSearch }) => {
           </button>
         </div>
 
-        {isLoading && <p className="text-center mt-4 text-gray-500">Loading...</p>}
+        {isLoading && <div className='py-6'> <LoadingSpinner className='size-6'/></div>}
 
         {filteredProducts.length > 0 && !isLoading && (
           <div className="mt-4 max-h-60 overflow-y-auto">

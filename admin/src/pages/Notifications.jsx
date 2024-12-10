@@ -1,36 +1,55 @@
-import React, { useEffect, useState } from 'react';
-import { useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { io } from 'socket.io-client';
 import { ShopContext } from '../contexts/ShopContext';
-
-const socket = io('http://localhost:3001'); // Replace with your backend URL
+import { backendUrl } from '../App';
+import Box from '../components/Box';
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
-  const {isLoading, setIsLoading, setPageTitle} = useContext(ShopContext)
-
-  console.log('Notification', notifications)
+  const { setPageTitle } = useContext(ShopContext);
 
   useEffect(() => {
-    // Listen for notifications
+    const socket = io(backendUrl || 'http://localhost:3001'); 
+
     socket.on('notification', (data) => {
       console.log('Notification received:', data);
-      setNotifications((prev) => [...prev, data]);
+      
+      if (data && data.fullDocument && data.items) {
+        setNotifications((prev) => [...prev, data]); 
+      }
     });
 
-    setPageTitle("Notifications")
+    setPageTitle('Notifications');
 
-    // Cleanup listener on unmount
-    return () => socket.off('notification');
-  }, []);
+    return () => {
+      socket.off('notification');
+      socket.disconnect();
+    };
+  }, [backendUrl, setPageTitle]); 
+
+  useEffect(() => {
+    console.log('Updated Notifications in state:', notifications);
+  }, [notifications]);
 
   return (
-    <div>
+    <div className='min-h-screen'>
       <ul>
-        {notifications.map((notif, index) => (
-          <li key={index} className='py-4 px-3 bg-white rounded-sm'>{`${notif.fullDocument.address.firstName} order's a ${notif.items[0].name}`}</li>
-        ))}
-        <li className='py-4 px-3 bg-white rounded-sm'>I am notification for my clients and orders that you want to hear.</li>
+        {notifications.length > 0 ? (
+          notifications.map((notif, index) => (
+            <li 
+              key={index} 
+              className="py-4 px-3 bg-white rounded-sm border mb-2"
+            >
+              {notif?.fullDocument?.address?.firstName 
+                ? `${notif.fullDocument.address.firstName} ordered a ${notif?.items?.[0]?.name || 'product'}`
+                : 'A new order was placed'}
+            </li>
+          ))
+        ) : (
+          <li className="py-4 px-3 bg-white rounded-sm border">
+            No new notifications yet.
+          </li>
+        )}
       </ul>
     </div>
   );

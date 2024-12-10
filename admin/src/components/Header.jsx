@@ -1,71 +1,114 @@
 import React, { useContext, useState } from 'react'
-import { IoMdNotificationsOutline } from "react-icons/io";
+import { FaBell } from "react-icons/fa";
 import NotificationsPopup from './NotificationsPopup';
-import adminPhoto from '../assets/admin-photo.jpeg'
+import adminPhoto from '../assets/admin-photo.jpeg';
 import { ShopContext } from '../contexts/ShopContext';
 import { useNavigate } from 'react-router-dom';
-import { MdArrowBack} from 'react-icons/md';
+import { MdArrowBack } from 'react-icons/md';
 import { IoLogOutOutline } from "react-icons/io5";
 
+import { io } from 'socket.io-client';
+import { useEffect } from 'react';
 
-
+const socket = io('http://localhost:3001')
 
 function Header({ setToken }) {
+  const [hasNotification, setHasNotification] = useState(false);
+  const [openNotificationPopup, setOpenNotificationPopup] = useState(false)
+  const navigate = useNavigate();
+  const { pageTitle } = useContext(ShopContext);
 
-  const [hasNotification, setHasNotification] = useState(false)
-  const navigate = useNavigate()
-  const {pageTitle} = useContext(ShopContext)
+  useEffect(() => {
+    // Listen for notifications
+    socket.on('notification', (data) => {
+      console.log('Notification received:', data);
+      setHasNotification((prev) => [...prev, data]);
+    });
 
-  console.log(pageTitle, "Title Orders")
+    // Cleanup listener on unmount
+    return () => socket.off('notification');
+  }, []);
 
-  const handleNotification = () => {
-    setHasNotification((hasNotification) => !hasNotification)
+  const handleNotification = ()=> {
+    setOpenNotificationPopup((open)=> !open)
   }
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    window.location.replace('/');
+  };
+
   return (
-    <div className='flex w-full items-center justify-between px-5 py-3 border-b bg-white border-[#F1F1F2]'>
+    <div className="flex w-full items-center justify-between px-5 py-4 bg-white border-b border-gray-200 shadow-md">
+      {/* Left Section - Back button and Page Title */}
+      {/* <div className="flex items-center gap-4">
+        <div 
+          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 cursor-pointer transition-colors"
+          onClick={() => navigate(-1)}
+        >
+          <MdArrowBack className="text-xl text-gray-700" />
+        </div>
+
+        <h1 className="text-2xl font-semibold text-gray-800">{pageTitle}</h1>
+      </div> */}
+
       <div className='flex items-center gap-2 text-[#919191]'>
-        <div className='cursor-pointer' onClick={()=>navigate(-1)}><MdArrowBack/></div>
-        
-      <h1 className='text-lg  '>{pageTitle}</h1>
+        <div className='cursor-pointer' onClick={() => navigate(-1)}><MdArrowBack /></div>
+
+        <h1 className='text-lg  '>{pageTitle}</h1>
       </div>
 
-      <div className='flex items-center'>
+      {/* Right Section - Notifications, Profile, and Logout */}
+      <div className="flex items-center space-x-4">
 
-        {/* <button className='py-2 px-3 text-sm border-0 ' onClick={() => setToken('')}>Logout</button> */}
+        {/* Notification Bell */}
 
-        <div className="relative cursor-pointer">
-          {/* Notification Icon */}
+        {/* Admin Profile Section */}
+        <div className="flex items-center space-x-2">
+          <div className="w-12 h-12 overflow-hidden rounded-full border-2 border-gray-300">
+            <img
+              src={adminPhoto}
+              className="w-full h-full object-cover"
+              alt="Admin Profile"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <h2 className="font-bold text-gray-800 text-sm">Rao Hanzala</h2>
+            <p className="text-xs text-gray-500">CEO & Founder</p>
+          </div>
+        </div>
+
+        <div className="relative">
           <div
             onClick={handleNotification}
-            className="bg-primary text-slate-50 text-2xl p-3 rounded-md"
+            className="relative p-3 rounded-md bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer"
           >
-            <IoMdNotificationsOutline />
-          </div>
-
-          {/* Red Badge */}
-          {hasNotification && (
-            <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500"></span>
-          )}
-        </div>
-        <div className="flex items-center justify-center gap-2 px-3">
-          <div className="w-12 h-12 overflow-hidden rounded-md">
-            <img src={adminPhoto} className="w-full rounded-full h-full object-cover" alt="" />
-          </div>
-          <div>
-            <h2 className="font-semibold text-[#333] text-sm">Rao Hanzala</h2>
-            <p className="text-[#919191] text-xs">Owner of RTW</p>
+            <FaBell className="text-xl text-gray-700" />
+            {hasNotification && (
+              <span
+                className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500 animate-ping"
+              ></span>
+            )}
+            {hasNotification && (
+              <span
+                className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500"
+              ></span>
+            )}
           </div>
         </div>
-
-        <div className='text-3xl font-extralight text-[#919191] cursor-pointer' >
-        <IoLogOutOutline onClick={()=>{ localStorage.removeItem('token'); window.location.replace('/')}} />
+        {/* Logout Button */}
+        <div
+          onClick={handleLogout}
+          className="flex items-center justify-center w-11 h-11 rounded-full bg-gray-100 hover:bg-red-100 text-red-600 transition-all cursor-pointer"
+        >
+          <IoLogOutOutline className="text-xl ml-[2px]" />
         </div>
-
       </div>
 
-      {hasNotification && <NotificationsPopup />}
+      {openNotificationPopup && <NotificationsPopup />}
     </div>
-  )
+  );
 }
 
-export default Header
+export default Header;
