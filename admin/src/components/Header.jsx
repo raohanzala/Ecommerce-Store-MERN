@@ -12,11 +12,11 @@ import { useEffect } from 'react';
 
 const socket = io('http://localhost:3001')
 
-function Header({ setToken }) {
+function Header() {
   const [hasNotification, setHasNotification] = useState(false);
   const [openNotificationPopup, setOpenNotificationPopup] = useState(false)
   const navigate = useNavigate();
-  const { pageTitle } = useContext(ShopContext);
+  const { pageTitle, logout } = useContext(ShopContext);
 
   useEffect(() => {
     // Listen for notifications
@@ -34,8 +34,8 @@ function Header({ setToken }) {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    window.location.replace('/');
+    logout();
+    navigate('/login');
   };
 
   return (

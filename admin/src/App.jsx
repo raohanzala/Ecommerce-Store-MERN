@@ -14,41 +14,55 @@ import Notifications from './pages/Notifications';
 import Loader from './components/Loader';
 import { ShopContext } from './contexts/ShopContext';
 import LoadingLogo from './components/LoadingLogo';
+import PublicRoute from './components/PublicRoute';
+import PrivateRoute from './components/PrivateRoute';
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL
 export const currency = 'Rs.'
 
 function App() {
 
-const {token, isLoading : contextLoading} = useContext(ShopContext)
+  const { token, isLoading: contextLoading } = useContext(ShopContext)
 
-// const [token, setToken] = useState(localStorage.getItem('token')?localStorage.getItem('token'):"")
+  // const [token, setToken] = useState(localStorage.getItem('token')?localStorage.getItem('token'):"")
 
-// useEffect(()=> {
-//   localStorage.setItem('token', token)
-// },[token])
+  // useEffect(()=> {
+  //   localStorage.setItem('token', token)
+  // },[token])
 
 
-// if (contextLoading) {
-//   return <Loader />;  // Or a simple loading spinner while the token is being fetched
-// }
+  // if (contextLoading) {
+  //   return <Loader />;  // Or a simple loading spinner while the token is being fetched
+  // }
   return (
     <div className='h-screen bg-[#f6f9ff]'>
-      {token ? 
-      <AppLayout>
-      <Suspense fallback={<Loader />}>
-        <Routes>
-          <Route path="/" element={<Dashboard  />} />
-          <Route path="/add" element={< AddProduct />} />
-          <Route path="/list" element={< ListProduct />} />
-          <Route path="/orders" element={< Orders />} />
-          <Route path="/notifications" element={< Notifications />} />
-          <Route path="/profile" element={< Profile/>} />
-        </Routes>
-      </Suspense>
-    </AppLayout> : <Login /> }
+      {
+        <AppLayout>
+          <Suspense fallback={<Loader />}>
+            <Routes>
+              <Route
+                path="/login"
+                element={
+                  <PublicRoute>
+                    <Login />
+                  </PublicRoute>
+                }
+              />
 
-    <Toaster
+              {/* All Protected Routes inside PrivateRoute */}
+            <Route path="/" element={<PrivateRoute />}>
+              <Route index element={<Dashboard />} /> 
+              <Route path="add" element={<AddProduct />} />
+              <Route path="list" element={<ListProduct />} />
+              <Route path="orders" element={<Orders />} />
+              <Route path="notifications" element={<Notifications />} />
+              <Route path="profile" element={<Profile />} />
+            </Route>
+            </Routes>
+          </Suspense>
+        </AppLayout>}
+
+      <Toaster
         position='top-center'
         gutter={12}
         containerStyle={{ margin: '1px' }}
@@ -69,7 +83,7 @@ const {token, isLoading : contextLoading} = useContext(ShopContext)
       />
     </div>
   );
-  
+
 }
 
 export default App;

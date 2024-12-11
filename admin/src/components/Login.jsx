@@ -6,12 +6,15 @@ import Logo from './Logo';
 import { useContext } from 'react';
 import { ShopContext } from '../contexts/ShopContext';
 import { assets } from '../../../frontend/src/assets/assets';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { setToken } = useContext(ShopContext)
+  const { login } = useContext(ShopContext);
+  const navigate = useNavigate();
+
 
   const handleLogin = async () => {
     
@@ -19,7 +22,8 @@ function Login() {
       const response = await axios.post(backendUrl + '/api/user/admin', { email, password })
       console.log(response, 'asdf')
       if (response.data.success) {
-        setToken(response.data.token)
+        login(response.data.token);
+      navigate('/');
       } else {
         toast.error(response.data.message)
       }

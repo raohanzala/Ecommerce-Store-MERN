@@ -18,11 +18,25 @@ const ShopContextProvider = ({ children }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [orders, setOrders] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
-  const [token, setToken] = useState(() => localStorage.getItem('token') || '');
+  const [token, setToken] = useState(localStorage.getItem('token') || '');
 
+  // Get token from localStorage when the app loads
   useEffect(() => {
-    localStorage.setItem('token', token)
-  }, [token])
+    if (token) localStorage.setItem('token', token);
+    else localStorage.removeItem('token');
+  }, [token]);
+
+  // Store token in context and localStorage
+  const login = (userToken) => {
+    setToken(userToken);
+    localStorage.setItem('token', userToken);
+  };
+
+  // Clear token from context and localStorage on logout
+  const logout = () => {
+    setToken('');
+    localStorage.removeItem('token');
+  };
 
   const handleError = (error, customMessage) => {
     console.error(error);
@@ -197,6 +211,8 @@ const ShopContextProvider = ({ children }) => {
     allUsers,
     pageTitle,
     setPageTitle,
+
+    login,logout,
 
     fetchPaginatedList,
     fetchAllOrders,
